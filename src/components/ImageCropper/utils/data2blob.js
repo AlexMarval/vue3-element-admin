@@ -1,9 +1,9 @@
 /**
- * database64文件格式转换为2进制
+ * Convierte un archivo en base64 a binario
  *
- * @param  {[String]} data dataURL 的格式为 “data:image/png;base64,****”,逗号之前都是一些说明性的文字，我们只需要逗号之后的就行了
- * @param  {[String]} mime [description]
- * @return {[blob]}      [description]
+ * @param  {[String]} data El formato de dataURL es "data:image/png;base64,****", todo lo antes de la coma es descriptivo, solo necesitamos lo que está después de la coma
+ * @param  {[String]} mime [descripción]
+ * @return {[blob]}      [descripción]
  */
 export default function(data, mime) {
   data = data.split(',')[1];

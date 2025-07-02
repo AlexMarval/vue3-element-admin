@@ -8,7 +8,7 @@ const tableRouter = {
   redirect: '/table/complex-table',
   name: 'Table',
   meta: {
-    title: 'Table表格',
+    title: 'Tablas',
     icon: 'table'
   },
   children: [
@@ -16,25 +16,25 @@ const tableRouter = {
       path: 'dynamic-table',
       component: () => import('@/views/table/dynamic-table/index.vue'),
       name: 'DynamicTable',
-      meta: { title: '动态 Table' }
+      meta: { title: 'Tabla Dinámica' }
     },
     {
       path: 'drag-table',
       component: () => import('@/views/table/drag-table.vue'),
       name: 'DragTable',
-      meta: { title: '拖拽 Table' }
+      meta: { title: 'Tabla Arrastrable' }
     },
     {
       path: 'inline-edit-table',
       component: () => import('@/views/table/inline-edit-table.vue'),
       name: 'InlineEditTable',
-      meta: { title: '行内编辑' }
+      meta: { title: 'Edición en Línea' }
     },
     {
       path: 'complex-table',
       component: () => import('@/views/table/complex-table.vue'),
       name: 'ComplexTable',
-      meta: { title: '综合 Table' }
+      meta: { title: 'Tabla Compleja' }
     }
   ]
 };

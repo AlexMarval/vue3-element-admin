@@ -1,7 +1,7 @@
 <template>
   <div class="drawer-container">
     <div>
-      <h3 class="drawer-title">系统设置</h3>
+      <h3 class="drawer-title">Configuración del sistema</h3>
 
       <!-- <div class="drawer-item">
         <span>Theme Color</span>
@@ -9,22 +9,22 @@
       </div> -->
 
       <div class="drawer-item">
-        <span>开启 Tags-View</span>
+        <span>Activar Tags-View</span>
         <el-switch v-model="tagsView" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>固定 Header</span>
+        <span>Fijar Header</span>
         <el-switch v-model="fixedHeader" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>侧边栏 Logo</span>
+        <span>Logo en la barra lateral</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>侧边栏子目录气泡显示</span>
+        <span>Mostrar burbuja en submenú lateral</span>
         <el-switch v-model="secondMenuPopup" class="drawer-switch" />
       </div>
 

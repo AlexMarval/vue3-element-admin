@@ -13,7 +13,7 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
-        <el-tooltip content="全局组件尺寸" effect="dark" placement="bottom">
+        <el-tooltip content="Tamaño global de los componentes" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
 
@@ -29,19 +29,19 @@
         <template #dropdown>
           <el-dropdown-menu>
             <router-link to="/profile/index">
-              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item>Perfil</el-dropdown-item>
             </router-link>
             <router-link to="/">
-              <el-dropdown-item>首页</el-dropdown-item>
+              <el-dropdown-item>Página Principal</el-dropdown-item>
             </router-link>
             <a target="_blank" href="https://github.com/midfar/vue3-element-admin">
-              <el-dropdown-item>项目地址</el-dropdown-item>
+              <el-dropdown-item>Repositorio</el-dropdown-item>
             </a>
             <a target="_blank" href="https://vue3-element-admin-site.midfar.com/">
-              <el-dropdown-item>文档地址</el-dropdown-item>
+              <el-dropdown-item>Documentación</el-dropdown-item>
             </a>
             <el-dropdown-item divided @click="logout">
-              <span style="display:block;">退出登录</span>
+              <span style="display:block;">Cerrar sesión</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>

@@ -1,34 +1,34 @@
 <template>
   <div class="errPage-container">
     <el-button :icon="ArrowLeft" class="pan-back-btn" @click="back">
-      返回
+      Volver
     </el-button>
     <el-row>
       <el-col :span="12">
         <h1 class="text-jumbo text-ginormous">
           Oops!
         </h1>
-        gif来源<a href="https://zh.airbnb.com/" target="_blank">airbnb</a> 页面
-        <h2>你没有权限去该页面</h2>
-        <h6>如有不满请联系你领导</h6>
+        gif de origen <a href="https://zh.airbnb.com/" target="_blank">airbnb</a> página
+        <h2>No tienes permiso para acceder a esta página</h2>
+        <h6>Si tienes alguna queja, contacta a tu supervisor</h6>
         <ul class="list-unstyled">
-          <li>或者你可以去:</li>
+          <li>O puedes ir a:</li>
           <li class="link-type">
             <router-link to="/dashboard">
-              回首页
+              Volver al inicio
             </router-link>
           </li>
           <li class="link-type">
-            <a href="https://www.taobao.com/">随便看看</a>
+            <a href="https://www.taobao.com/">Explorar libremente</a>
           </li>
-          <li><a href="#" @click.prevent="dialogVisible = true">点我看图</a></li>
+          <li><a href="#" @click.prevent="dialogVisible = true">Haz clic para ver la imagen</a></li>
         </ul>
       </el-col>
       <el-col :span="12">
         <img :src="errGif" width="313" height="428" alt="Girl has dropped her ice cream.">
       </el-col>
     </el-row>
-    <el-dialog v-model="dialogVisible" title="随便看">
+    <el-dialog v-model="dialogVisible" title="Vista rápida">
       <img :src="ewizardClap" class="pan-img">
     </el-dialog>
   </div>

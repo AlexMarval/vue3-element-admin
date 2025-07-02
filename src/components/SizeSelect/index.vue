@@ -22,9 +22,9 @@ export default defineComponent({
   data() {
     return {
       sizeOptions: [
-        { label: '默认', value: 'default' },
-        { label: '大号', value: 'large' },
-        { label: '小号', value: 'small' }
+        { label: 'Por defecto', value: 'default' },
+        { label: 'Grande', value: 'large' },
+        { label: 'Pequeño', value: 'small' }
       ]
     };
   },
