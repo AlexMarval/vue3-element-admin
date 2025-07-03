@@ -35,6 +35,8 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/vite": "^4.1.11",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.14.5",
     "@vitejs/plugin-vue": "^5.0.5",
@@ -47,6 +49,7 @@
     "npm-run-all2": "^6.2.0",
     "rollup-plugin-svg-sprites": "^1.2.5",
     "sass": "^1.77.6",
+    "tailwindcss": "^4.1.11",
     "typescript": "~5.4.0",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-vue-components": "^0.27.1",

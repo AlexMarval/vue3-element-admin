@@ -6,6 +6,7 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 import Inspect from 'vite-plugin-inspect';
+import tailwindcssVite from '@tailwindcss/vite';
 
 // element plus 样式自动按需导入
 import AutoImport from 'unplugin-auto-import/vite';
@@ -55,6 +56,7 @@ export default defineConfig(({ command, mode }) => {
     plugins: [
       vue(),
       Inspect(),
+      tailwindcssVite(),
       AutoImport({
         resolvers: [ElementPlusResolver()]
       }),
