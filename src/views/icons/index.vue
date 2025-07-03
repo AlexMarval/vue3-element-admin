@@ -1,40 +1,38 @@
 <template>
-  <div class="icons-container">
+  <div class="mt-2 mx-5 overflow-hidden">
     <aside>
       <a href="https://vue3-element-admin-site.midfar.com/guide/advanced/icon.html" target="_blank">Add and use
       </a>
     </aside>
     <el-tabs type="border-card">
       <el-tab-pane label="Icons">
-        <div class="grid">
-          <div v-for="item of svgIcons" :key="item" @click="handleClipboard(generateIconCode(item), $event)">
-            <el-tooltip placement="top">
-              <template #content>
-                {{ generateIconCode(item) }}
-              </template>
-              <div class="icon-item">
-                <svg-icon :icon-class="item" class-name="disabled" />
-                <span>{{ item }}</span>
-              </div>
-            </el-tooltip>
+        <div class="w-full p-2">
+          <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-x-2 gap-y-2">
+            <div v-for="item of svgIcons" :key="item">
+              <el-tooltip placement="top">
+                <template #content>
+                  {{ generateIconCode(item) }}
+                </template>
+                <div class="flex flex-col items-center justify-center w-[100px] h-[100px] mx-auto my-2 cursor-pointer text-[#24292e] text-[30px]"
+                  @click="handleClipboard(generateIconCode(item), $event)">
+                  <svg-icon :icon-class="item" class-name="disabled" />
+                  <span class="block text-[16px] mt-2 text-center">{{ item }}</span>
+                </div>
+              </el-tooltip>
+            </div>
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="Element-UI Icons">
-        <div class="grid">
-          <div v-for="item of elementIcons" :key="item" @click="handleClipboard(generateElementIconCode(item), $event)">
-            <el-tooltip placement="top">
-              <template #content>
-                {{ generateElementIconCode(item) }}
-              </template>
-              <div class="icon-item">
-                <el-icon>
-                  <!-- 必须添加以下两个class，否则复制功能，点击svg元素时有bug -->
-                  <component :is="item" class="svg-icon disabled"></component>
-                </el-icon>
-                <span>{{ item }}</span>
-              </div>
-            </el-tooltip>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4 p-4">
+          <div
+            v-for="item of elementIcons"
+            :key="item"
+            @click="handleClipboard(generateElementIconCode(item), $event)"
+            class="flex flex-col items-center justify-center w-[100px] h-[100px] cursor-pointer rounded hover:bg-gray-100 transition"
+          >
+            <component :is="item" class="w-10 h-10 text-gray-800 disabled" />
+            <span class="block text-[16px] mt-2 text-center">{{ item }}</span>
           </div>
         </div>
       </el-tab-pane>
@@ -76,36 +74,6 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.icons-container {
-  margin: 10px 20px 0;
-  overflow: hidden;
-
-  .grid {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .icon-item {
-    margin: 20px;
-    height: 85px;
-    text-align: center;
-    width: 100px;
-    float: left;
-    font-size: 30px;
-    color: #24292e;
-    cursor: pointer;
-  }
-
-  span {
-    display: block;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-
-  .disabled {
-    pointer-events: none;
-  }
-}
+<style scoped>
+/* Migrado a Tailwind: todos los estilos de layout, grid, tamaño, color y espaciado están en el template. */
 </style>
