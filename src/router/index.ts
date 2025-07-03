@@ -1,7 +1,7 @@
-import { markRaw } from 'vue';
+// import { markRaw } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router'; // createWebHashHistory, createWebHistory
 import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router';
-import { Help as IconHelp } from '@element-plus/icons-vue';
+// import { Help as IconHelp } from '@element-plus/icons-vue';
 
 /* Layout */
 const Layout = ():RouteComponent => import('@/layout/index.vue');
@@ -180,7 +180,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
     name: 'Example',
     meta: {
       title: 'Ejemplo Integral',
-      icon: markRaw(IconHelp)
+      icon: 'example'
     },
     children: [
       {

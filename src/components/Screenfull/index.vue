@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <svg-icon :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" @click="click" />
+  <div class="flex justify-center items-center">
+    <div :class="['relative inline-flex items-center', { 'ml-2 w-[210px]': show }]">
+      <svg-icon :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" @click="click" />
+    </div>
   </div>
 </template>
 

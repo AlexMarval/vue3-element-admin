@@ -1,17 +1,22 @@
 <template>
-  <el-dropdown trigger="click" @command="handleSetSize">
-    <div>
-      <svg-icon class-name="size-icon" icon-class="size" />
+  <div class="flex justify-center items-center">
+    <div :class="['relative inline-flex items-center', { 'ml-2 w-[210px]': show }]">
+        <el-dropdown trigger="click" @command="handleSetSize">
+          <div>
+            <svg-icon class-name="size-icon" icon-class="size" />
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size === item.value"
+                :command="item.value">
+                {{ item.label }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
     </div>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size === item.value"
-          :command="item.value">
-          {{ item.label }}
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
+  </div>
+
 </template>
 
 <script>
