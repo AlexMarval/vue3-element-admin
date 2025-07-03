@@ -3,10 +3,10 @@
     {'fixed top-0 mobile openSidebar': device === 'mobile' && sidebar.opened}
   ]">
     <div v-if="device === 'mobile' && sidebar.opened" class="fixed inset-0 bg-black opacity-30 z-[999]" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
+    <Sidebar class="sidebar-container" />
     <div :class="[{'hasTagsView': needTagsView}, 'main-container']">
       <div :class="[
-        { 
+        {
           'fixed top-0 right-0 z-10 transition-all': fixedHeader,
           'w-[calc(100%-54px)]': hideSidebar,
           'w-full': device === 'mobile'
@@ -23,45 +23,31 @@
   </div>
 </template>
 
-<script>
-import RightPanel from '@/components/RightPanel';
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components';
-import ResizeMixin from './mixin/ResizeHandler';
-import { mapState } from 'pinia';
-import store from '@/store';
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 
-export default defineComponent({
-  name: 'LayoutIndex',
-  components: {
-    AppMain,
-    Navbar,
-    RightPanel,
-    Settings,
-    Sidebar,
-    TagsView
-  },
-  mixins: [ResizeMixin],
-  computed: {
-    ...mapState(store.app, ['sidebar', 'device']),
-    ...mapState(store.settings, {
-      showSettings: 'showSettings',
-      needTagsView: 'tagsView',
-      fixedHeader: 'fixedHeader'
-    }),
-    classObj() {
-      return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
-      };
-    }
-  },
-  methods: {
-    handleClickOutside() {
-      store.app().closeSidebar({ withoutAnimation: false });
-    }
-  }
-});
+import { AppMain, Navbar, Settings, TagsView } from './components';
+import Sidebar from './components/Sidebar/index.vue';
+import store from '@/store';
+
+// Pinia state
+const appStore = store.app();
+const settingsStore = store.settings();
+const { sidebar, device } = storeToRefs(appStore);
+const { showSettings, tagsView: needTagsView, fixedHeader } = storeToRefs(settingsStore);
+
+// Computed for classObj
+const classObj = computed(() => ({
+  hideSidebar: !sidebar.value.opened,
+  openSidebar: sidebar.value.opened,
+  withoutAnimation: sidebar.value.withoutAnimation,
+  mobile: device.value === 'mobile'
+}));
+
+const hideSidebar = computed(() => !sidebar.value.opened);
+
+const handleClickOutside = () => {
+  appStore.closeSidebar({ withoutAnimation: false });
+};
 </script>
