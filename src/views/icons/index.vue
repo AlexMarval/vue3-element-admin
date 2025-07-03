@@ -40,38 +40,24 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import clipboard from '@/utils/clipboard';
 import svgIcons from './svg-icons';
 import ElementPlusIconsVue from './element-icons';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'Icons',
-  components: {
-    ...ElementPlusIconsVue
-  },
-  data() {
-    return {
-      svgIcons,
-      elementIcons: Object.keys(ElementPlusIconsVue)
-    };
-  },
-  methods: {
-    generateIconCode(symbol) {
-      // console.log('generateIconCode symbol=', symbol);
-      return `<svg-icon icon-class="${symbol}" />`;
-    },
-    generateElementIconCode(symbol) {
-      // console.log('generateElementIconCode symbol=', symbol);
-      return `<el-icon><${symbol} /></el-icon>`;
-    },
-    handleClipboard(text, event) {
-      // console.log('handleClipboard', text, typeof text, event);
-      clipboard(text, event);
-    }
-  }
-});
+const elementIcons = Object.keys(ElementPlusIconsVue);
+
+const generateIconCode = (symbol: string) => {
+  return `<svg-icon icon-class="${symbol}" />`;
+};
+
+const generateElementIconCode = (symbol: string) => {
+  return `<el-icon><${symbol} /></el-icon>`;
+};
+
+const handleClipboard = (text: string, event: Event) => {
+  clipboard(text, event);
+};
 </script>
 
 <style scoped>
