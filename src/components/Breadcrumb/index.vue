@@ -13,14 +13,6 @@
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
-
-  <div
-    v-if="fullTitle"
-    class="text-xs text-gray-400 mt-1 ml-2 select-text truncate"
-    style="max-width: 100%"
-  >
-    {{ fullTitle }}
-  </div>
 </template>
 
 <script setup lang="ts">
