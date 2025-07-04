@@ -3,12 +3,15 @@ import { useRoute, useRouter } from 'vue-router'
 
 import store from '@/store'
 import { validUsername } from '@/utils/validate'
+import { useNotification } from '@/components/Notification'
+
 import type { QueryType } from '../interfaces/index'
 import { LoginFieldType } from '../interfaces/index'
 
 export function useLogin() {
   const route = useRoute()
   const router = useRouter()
+  const { success, error, warning, info } = useNotification()
 
   const loginForm = reactive({
     username: 'admin',
@@ -38,12 +41,12 @@ export function useLogin() {
 
   const handleLogin = () => {
     if (!loginForm.username || !validUsername(loginForm.username)) {
-      window.alert('Please enter the correct user name')
+      warning('Please enter the correct user name', 'Warning')
       return
     }
 
     if (!loginForm.password || loginForm.password.length < 6) {
-      window.alert('The password can not be less than 6 digits')
+      warning('The password can not be less than 6 digits', 'Warning')
       return
     }
 
@@ -53,10 +56,12 @@ export function useLogin() {
       .user()
       .login(loginForm)
       .then(() => {
+        success('Login successful!', 'Success')
         router.push({ path: redirect.value || '/', query: otherQuery.value })
         loading.value = false
       })
       .catch(() => {
+        error('Login failed. Please try again.', 'Error')
         loading.value = false
       })
   }

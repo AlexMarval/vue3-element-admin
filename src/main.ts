@@ -1,21 +1,33 @@
-import { createApp } from 'vue';
+import { createApp } from 'vue'
 
-import App from './App.vue';
-import router from './router';
-import { setupStore } from './store';
+import App from './App.vue'
+import router from './router'
+import { setupStore } from './store'
 
-import './style.css';
-import '@/styles/index.scss';
-import SvgIcon from './icons'; // icon
-import './permission'; // permission control
-import vPermission from './directive/permission/index'; // permission control
-import { checkEnableLogs } from './utils/error-log'; // error log
+import './style.css'
+import '@/styles/index.scss'
+import SvgIcon from './icons' // icon
+import './permission' // permission control
+import vPermission from './directive/permission/index' // permission control
+import { checkEnableLogs } from './utils/error-log' // error log
+import Toast, { POSITION } from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+import registerGlobalComponents from '@/plugins/global-components'
 
-const app = createApp(App);
-setupStore(app);
-app.use(router);
-app.component('svg-icon', SvgIcon);
-app.directive('permission', vPermission);
-checkEnableLogs(app);
+const app = createApp(App)
+setupStore(app)
+app.use(router)
+registerGlobalComponents(app)
+app.use(Toast, {
+  position: POSITION.BOTTOM_RIGHT,
+  timeout: 3500,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  showCloseButtonOnHover: false,
+})
+app.component('svg-icon', SvgIcon)
+app.directive('permission', vPermission)
+checkEnableLogs(app)
 
-app.mount('#app');
+app.mount('#app')

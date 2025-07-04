@@ -64,11 +64,13 @@ declare module 'vue' {
     Hamburger: typeof import('./src/components/Hamburger/index.vue')['default']
     HeaderSearch: typeof import('./src/components/HeaderSearch/index.vue')['default']
     ImageCropper: typeof import('./src/components/ImageCropper/index.vue')['default']
+    Input: typeof import('./src/components/Input/index.vue')['default']
     Keyboard: typeof import('./src/components/Charts/Keyboard.vue')['default']
     LineMarker: typeof import('./src/components/Charts/LineMarker.vue')['default']
     Mallki: typeof import('./src/components/TextHoverEffect/Mallki.vue')['default']
     MDinput: typeof import('./src/components/MDinput/index.vue')['default']
     MixChart: typeof import('./src/components/Charts/MixChart.vue')['default']
+    Notification: typeof import('./src/components/Notification.vue')['default']
     Pagination: typeof import('./src/components/Pagination/index.vue')['default']
     PanThumb: typeof import('./src/components/PanThumb/index.vue')['default']
     RightPanel: typeof import('./src/components/RightPanel/index.vue')['default']
@@ -84,6 +86,7 @@ declare module 'vue' {
     Tinymce: typeof import('./src/components/Tinymce/index.vue')['default']
     UploadExcel: typeof import('./src/components/UploadExcel/index.vue')['default']
     VueCountTo: typeof import('./src/components/vue-count-to/vue-countTo.vue')['default']
+    BaseInput: typeof import('./src/components/Input/index.vue').default
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
