@@ -87,7 +87,7 @@ const resolvePath = (routePath: string): string => {
 </script>
 
 <template>
-  <div v-if="!isItemHidden" class="root-sidebar-item">
+  <div v-if="!isItemHidden" class="">
     <template
       v-if="hasOneShowingChild(props.item.children, props.item) && (!onlyOneChild?.children || onlyOneChild?.noShowingChildren) && !props.item.meta?.alwaysShow"
     >
@@ -98,24 +98,25 @@ const resolvePath = (routePath: string): string => {
           :class="{ 'submenu-title-noDropdown': !isNest }"
           class="flex items-center px-4 py-2 transition-colors duration-150 hover:bg-gray-700"
         >
-          <template v-if="get2MetaIconPath(onlyOneChild, props.item)">
+        <template v-if="get2MetaIconPath(onlyOneChild, props.item)">
             <span class="flex items-center gap-2">
               <template v-if="typeof get2MetaIconPath(onlyOneChild, props.item) === 'string'">
-                <svg-icon class="w-5 h-5 flex-shrink-0 text-gray-300"
+                <svg-icon
+                  class="w-5 h-5 flex-shrink-0 group-[.is-active]:text-[#409EFF] text-gray-300"
                   :icon-class="get2MetaIconPath(onlyOneChild, props.item) as string"
                 />
+                <span v-if="secondMenuPopup && isTopRoute" class="text text-one text-one-added group-[.is-active]:text-[#409EFF] text-gray-300">{{ onlyOneChild.meta.title }}</span>
               </template>
               <template v-else>
                 <component
+                  class="svg-icon w-5 h-5 flex-shrink-0 group-[.is-active]:text-[#409EFF] text-gray-300"
                   :is="get2MetaIconPath(onlyOneChild, props.item)"
-                  class="w-5 h-5 flex-shrink-0 text-gray-300"
                 />
               </template>
-              <span class="text-[14px] font-medium text-gray-300">
-                {{ onlyOneChild.meta.title }}
-              </span>
+              <span class="text group-[.is-active]:text-[#409EFF] text-gray-300">{{ onlyOneChild.meta.title }}</span>
             </span>
           </template>
+
           <template v-else>
             <span class="flex items-center gap-2">
               <span class="text-[14px] font-medium text-gray-300">
@@ -131,17 +132,17 @@ const resolvePath = (routePath: string): string => {
       <template v-if="props.item.meta" #title>
         <svg-icon
           v-if="typeof getMetaIconPath(props.item) === 'string'"
+          class="w-5 h-5 flex-shrink-0 group-[.is-active]:text-[#409EFF] text-[#bfcbd9]"
           :icon-class="getMetaIconPath(props.item) as string"
-          class="w-5 h-5 flex-shrink-0 text-[#bfcbd9]"
         />
         <component
           v-else-if="getMetaIconPath(props.item)"
           :is="getMetaIconPath(props.item)"
-          class="w-5 h-5 flex-shrink-0 text-[#bfcbd9] "
+          class="w-5 h-5 flex-shrink-0 group-[.is-active]:text-[#409EFF] text-[#bfcbd9]"
         />
         <span
           v-if="!secondMenuPopup"
-          class="text text-two text-[#bfcbd9]"
+          class="text text-two group-[.is-active]:text-[#409EFF] text-[#bfcbd9]"
         >{{ props.item.meta.title }}</span>
       </template>
 
