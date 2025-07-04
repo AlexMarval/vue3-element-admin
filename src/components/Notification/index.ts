@@ -22,11 +22,17 @@ export interface NotifyOptions {
   }>
 }
 
+// Extiende el tipo de opciones para Toastification para permitir clases personalizadas
+interface ToastCustomOptions {
+  toastClassName?: string
+  bodyClassName?: string
+}
+
 export const useNotification = () => {
   const toast = useToast()
 
   const notify = ({ message, type = NotificationType.Info, title, options }: NotifyOptions) => {
-    toast[type](message, {
+    const customOptions: ToastCustomOptions & Record<string, any> = {
       position: POSITION.BOTTOM_RIGHT,
       timeout: 3500,
       closeOnClick: true,
@@ -35,7 +41,14 @@ export const useNotification = () => {
       showCloseButtonOnHover: false,
       ...options,
       ...(title ? { title } : {}),
-    })
+    }
+    // Personalización para warning
+    if (type === NotificationType.Warning) {
+      customOptions.toastClassName = 'bg-yellow-100 text-yellow-800'
+      customOptions.bodyClassName = 'text-yellow-800'
+    }
+
+    toast[type](message, customOptions)
   }
 
   const success = (message: string, title?: string, options?: NotifyOptions['options']) => {

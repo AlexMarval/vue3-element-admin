@@ -50,27 +50,6 @@
         <span v-if="!loading">Entrar</span>
         <span v-else>Cargando...</span>
       </button>
-
-      <!-- Demo tips -->
-      <div class="relative text-white text-sm space-y-2">
-        <div>
-          <span class="mr-4">Usuario: admin</span>
-          <span>Contraseña: cualquier</span>
-        </div>
-        <div>
-          <span class="mr-4">Usuario: editor</span>
-          <span>Contraseña: cualquier</span>
-        </div>
-
-        <!-- Botón de terceros -->
-        <button
-          type="button"
-          class="absolute right-0 bottom-1 bg-blue-500 text-white py-2 px-3 rounded-md hover:bg-blue-600 hidden sm:block cursor-pointer"
-          @click="showDialog = true"
-        >
-          O conecta con
-        </button>
-      </div>
     </form>
 
     <el-dialog title="O conecta con" v-model="showDialog">

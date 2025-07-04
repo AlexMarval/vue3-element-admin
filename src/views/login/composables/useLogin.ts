@@ -41,12 +41,12 @@ export function useLogin() {
 
   const handleLogin = () => {
     if (!loginForm.username || !validUsername(loginForm.username)) {
-      warning('Please enter the correct user name', 'Warning')
+      warning('Por favor ingresa un usuario válido', 'Advertencia')
       return
     }
 
     if (!loginForm.password || loginForm.password.length < 6) {
-      warning('The password can not be less than 6 digits', 'Warning')
+      warning('La contraseña no puede tener menos de 6 caracteres', 'Advertencia')
       return
     }
 
@@ -56,12 +56,12 @@ export function useLogin() {
       .user()
       .login(loginForm)
       .then(() => {
-        success('Login successful!', 'Success')
+        success('¡Inicio de sesión exitoso!', 'Éxito')
         router.push({ path: redirect.value || '/', query: otherQuery.value })
         loading.value = false
       })
       .catch(() => {
-        error('Login failed. Please try again.', 'Error')
+        error('Error al iniciar sesión. Intenta de nuevo.', 'Error')
         loading.value = false
       })
   }
