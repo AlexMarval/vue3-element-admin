@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BackToTop: typeof import('./src/components/BackToTop/index.vue')['default']
+    BaseInput: typeof import('./src/components/Input/index.vue').default
     Breadcrumb: typeof import('./src/components/Breadcrumb/index.vue')['default']
     DragSelect: typeof import('./src/components/DragSelect/index.vue')['default']
     DropdownMenu: typeof import('./src/components/Share/DropdownMenu.vue')['default']
@@ -86,7 +87,6 @@ declare module 'vue' {
     Tinymce: typeof import('./src/components/Tinymce/index.vue')['default']
     UploadExcel: typeof import('./src/components/UploadExcel/index.vue')['default']
     VueCountTo: typeof import('./src/components/vue-count-to/vue-countTo.vue')['default']
-    BaseInput: typeof import('./src/components/Input/index.vue').default
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

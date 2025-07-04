@@ -5,23 +5,23 @@
       autocomplete="on"
       class="relative w-full max-w-[520px] px-8 pt-40"
     >
-      <div class="text-[26px] text-[#eee] font-bold text-center mb-10">Login Form</div>
+      <div class="text-[26px] text-[#eee] font-bold text-center mb-10">Iniciar sesión</div>
 
-      <!-- Username -->
+      <!-- Usuario -->
       <base-input
         v-model="loginForm.username"
         icon="user"
-        placeholder="Username"
+        placeholder="Usuario"
         autocomplete="on"
         :container-class="'mb-4'"
       />
 
-      <!-- Password -->
+      <!-- Contraseña -->
       <base-input
         v-model="loginForm.password"
         :type="passwordType"
         icon="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         autocomplete="on"
         :container-class="'mb-6 relative'"
         @focus="capsTooltip = false"
@@ -39,42 +39,42 @@
       </base-input>
 
       <!-- Tooltip -->
-      <p v-if="capsTooltip" class="text-yellow-300 text-sm mb-2">Caps lock is On</p>
+      <p v-if="capsTooltip" class="text-yellow-300 text-sm mb-2">Bloq Mayús activado</p>
 
-      <!-- Submit -->
+      <!-- Botón Entrar -->
       <button
         type="submit"
         :disabled="loading"
         class="w-full bg-blue-500 text-white py-3 rounded-md mb-6 hover:bg-blue-600 disabled:opacity-60 cursor-pointer"
       >
-        <span v-if="!loading">Login</span>
-        <span v-else>Loading...</span>
+        <span v-if="!loading">Entrar</span>
+        <span v-else>Cargando...</span>
       </button>
 
       <!-- Demo tips -->
       <div class="relative text-white text-sm space-y-2">
         <div>
-          <span class="mr-4">Username: admin</span>
-          <span>Password: any</span>
+          <span class="mr-4">Usuario: admin</span>
+          <span>Contraseña: cualquier</span>
         </div>
         <div>
-          <span class="mr-4">Username: editor</span>
-          <span>Password: any</span>
+          <span class="mr-4">Usuario: editor</span>
+          <span>Contraseña: cualquier</span>
         </div>
 
-        <!-- Third-party button -->
+        <!-- Botón de terceros -->
         <button
           type="button"
           class="absolute right-0 bottom-1 bg-blue-500 text-white py-2 px-3 rounded-md hover:bg-blue-600 hidden sm:block cursor-pointer"
           @click="showDialog = true"
         >
-          Or connect with
+          O conecta con
         </button>
       </div>
     </form>
 
-    <el-dialog title="Or connect with" v-model="showDialog">
-      Can not be simulated on local, so please combine your own business simulation!!!
+    <el-dialog title="O conecta con" v-model="showDialog">
+      No se puede simular en local, ¡combina tu propia lógica de negocio!
       <br /><br /><br />
       <social-sign />
     </el-dialog>
