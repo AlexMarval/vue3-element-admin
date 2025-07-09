@@ -111,7 +111,7 @@
   import Tinymce from '@/components/Tinymce'
   import Upload from '@/components/Upload/SingleImage3'
   import MDinput from '@/components/MDinput'
-  import Sticky from '@/components/Sticky' // 粘性header组件
+  import Sticky from '@/components/Sticky' // Componente de encabezado fijo
   import tagsViewStore from '@/store/modules/tagsView'
   import { validURL } from '@/utils/validate'
   import { fetchArticle } from '@/api/article'
@@ -121,12 +121,12 @@
 
   const defaultForm = {
     status: 'draft',
-    title: '', // 文章题目
-    content: '', // 文章内容
-    content_short: '', // 文章摘要
-    source_uri: '', // 文章外链
-    image_uri: '', // 文章图片
-    display_time: undefined, // 前台展示时间
+    title: '', // Título del artículo
+    content: '', // Contenido del artículo
+    content_short: '', // Resumen del artículo
+    source_uri: '', // Enlace externo del artículo
+    image_uri: '', // Imagen del artículo
+    display_time: undefined, // Hora de visualización en el front-end
     id: undefined,
     platforms: ['a-platform'],
     comment_disabled: false,
@@ -155,10 +155,10 @@
       const validateRequire = (rule, value, callback) => {
         if (value === '') {
           ElMessage({
-            message: rule.field + '为必传项',
+            message: rule.field + ' es un campo obligatorio',
             type: 'error',
           })
-          callback(new Error(rule.field + '为必传项'))
+          callback(new Error(rule.field + ' es un campo obligatorio'))
         } else {
           callback()
         }
@@ -169,10 +169,10 @@
             callback()
           } else {
             ElMessage({
-              message: '外链url填写不正确',
+              message: 'La URL del enlace externo no es correcta',
               type: 'error',
             })
-            callback(new Error('外链url填写不正确'))
+            callback(new Error('La URL del enlace externo no es correcta'))
           }
         } else {
           callback()
@@ -220,7 +220,7 @@
       this.tempRoute = Object.assign({}, this.$route)
 
       // https://kgithub.com/nuysoft/Mock/issues/301
-      // 避免 _xhr.upload.addEventListener is not a function
+      // Evitar que _xhr.upload.addEventListener no sea una función
       if (window._XMLHttpRequest) {
         var xhr = new window._XMLHttpRequest()
         window.XMLHttpRequest.prototype.upload = xhr.upload
@@ -261,8 +261,8 @@
           if (valid) {
             this.loading = true
             ElNotification({
-              title: '成功',
-              message: '发布文章成功',
+              title: 'Éxito',
+              message: 'Artículo publicado con éxito',
               type: 'success',
               duration: 2000,
             })
@@ -277,13 +277,13 @@
       draftForm() {
         if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
           ElMessage({
-            message: '请填写必要的标题和内容',
+            message: 'Por favor, rellene el título y el contenido necesarios',
             type: 'warning',
           })
           return
         }
         ElMessage({
-          message: '保存成功',
+          message: 'Guardado con éxito',
           type: 'success',
           showClose: true,
           duration: 1000,

@@ -1,12 +1,29 @@
 <template>
   <div class="app-container">
-    <div style="margin-bottom: 20px;">
-    <el-input v-model="filename" placeholder="Please enter the file name (default file)" style="width:300px;" :icon="IconDocument" />
-    <el-button :loading="downloadLoading" type="primary" :icon="IconDocument" @click="handleDownload">
-      Export Zip
-    </el-button>
-  </div>
-    <el-table v-loading="listLoading" :data="list" element-loading-text="拼命加载中" border fit highlight-current-row>
+    <div style="margin-bottom: 20px">
+      <el-input
+        v-model="filename"
+        placeholder="Please enter the file name (default file)"
+        style="width: 300px"
+        :icon="IconDocument"
+      />
+      <el-button
+        :loading="downloadLoading"
+        type="primary"
+        :icon="IconDocument"
+        @click="handleDownload"
+      >
+        Export Zip
+      </el-button>
+    </div>
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Cargando..."
+      border
+      fit
+      highlight-current-row
+    >
       <el-table-column align="center" label="ID" width="95">
         <template v-slot="scope">
           {{ scope.$index }}
@@ -40,49 +57,49 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import { fetchList } from '@/api/article';
-import { Timer as IconTimer, Document as IconDocument } from '@element-plus/icons-vue';
-import { markRaw } from 'vue';
+  import { defineComponent } from 'vue'
+  import { fetchList } from '@/api/article'
+  import { Timer as IconTimer, Document as IconDocument } from '@element-plus/icons-vue'
+  import { markRaw } from 'vue'
 
-export default defineComponent({
-  name: 'ExportZip',
-  components: {
-    IconTimer
-  },
-  data() {
-    return {
-      IconDocument: markRaw(IconDocument),
-      list: null,
-      listLoading: true,
-      downloadLoading: false,
-      filename: ''
-    };
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    async fetchData() {
-      this.listLoading = true;
-      const { data } = await fetchList();
-      this.list = data.items;
-      this.listLoading = false;
+  export default defineComponent({
+    name: 'ExportZip',
+    components: {
+      IconTimer,
     },
-    handleDownload() {
-      this.downloadLoading = true;
-      import('@/vendor/Export2Zip').then(zip => {
-        const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date'];
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time'];
-        const list = this.list;
-        const data = this.formatJson(filterVal, list);
-        zip.export_txt_to_zip(tHeader, data, this.filename, this.filename);
-        this.downloadLoading = false;
-      });
+    data() {
+      return {
+        IconDocument: markRaw(IconDocument),
+        list: null,
+        listLoading: true,
+        downloadLoading: false,
+        filename: '',
+      }
     },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => v[j]));
-    }
-  }
-});
+    created() {
+      this.fetchData()
+    },
+    methods: {
+      async fetchData() {
+        this.listLoading = true
+        const { data } = await fetchList()
+        this.list = data.items
+        this.listLoading = false
+      },
+      handleDownload() {
+        this.downloadLoading = true
+        import('@/vendor/Export2Zip').then(zip => {
+          const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+          const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+          const list = this.list
+          const data = this.formatJson(filterVal, list)
+          zip.export_txt_to_zip(tHeader, data, this.filename, this.filename)
+          this.downloadLoading = false
+        })
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]))
+      },
+    },
+  })
 </script>
