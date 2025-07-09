@@ -13,37 +13,37 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import store from '@/store';
+  import { defineComponent } from 'vue'
+  import userStore from '@/store/modules/user'
 
-export default defineComponent({
-  props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          name: '',
-          email: ''
-        };
+  export default defineComponent({
+    props: {
+      user: {
+        type: Object,
+        default: () => {
+          return {
+            name: '',
+            email: '',
+          }
+        },
+      },
+    },
+    data() {
+      return {
+        userName: this.user.name,
+        userEmail: this.user.email,
       }
-    }
-  },
-  data() {
-    return {
-      userName: this.user.name,
-      userEmail: this.user.email
-    };
-  },
-  methods: {
-    submit() {
-      store.user().name = this.userName;
-      // store.user().email = this.userEmail;
-      ElMessage({
-        message: 'User information has been updated successfully',
-        type: 'success',
-        duration: 5 * 1000
-      });
-    }
-  }
-});
+    },
+    methods: {
+      submit() {
+        userStore().name = this.userName
+        // userStore().email = this.userEmail;
+        ElMessage({
+          message: 'User information has been updated successfully',
+          type: 'success',
+          duration: 5 * 1000,
+        })
+      },
+    },
+  })
 </script>

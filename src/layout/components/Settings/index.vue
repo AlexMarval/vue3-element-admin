@@ -27,105 +27,104 @@
         <span>Mostrar burbuja en submenú lateral</span>
         <el-switch v-model="secondMenuPopup" class="drawer-switch" />
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-// import ThemePicker from '@/components/ThemePicker';
-import { defineComponent } from 'vue';
-import store from '@/store';
+  // import ThemePicker from '@/components/ThemePicker';
+  import { defineComponent } from 'vue'
+  import settingsStore from '@/store/modules/settings'
 
-export default defineComponent({
-  components: {
-    // ThemePicker
-  },
-  data() {
-    return {};
-  },
-  computed: {
-    fixedHeader: {
-      get() {
-        return store.settings().fixedHeader;
-      },
-      set(val) {
-        store.settings().changeSetting({
-          key: 'fixedHeader',
-          value: val
-        });
-      }
+  export default defineComponent({
+    components: {
+      // ThemePicker
     },
-    tagsView: {
-      get() {
-        return store.settings().tagsView;
-      },
-      set(val) {
-        store.settings().changeSetting({
-          key: 'tagsView',
-          value: val
-        });
-      }
+    data() {
+      return {}
     },
-    sidebarLogo: {
-      get() {
-        return store.settings().sidebarLogo;
+    computed: {
+      fixedHeader: {
+        get() {
+          return settingsStore().fixedHeader
+        },
+        set(val) {
+          settingsStore().changeSetting({
+            key: 'fixedHeader',
+            value: val,
+          })
+        },
       },
-      set(val) {
-        store.settings().changeSetting({
-          key: 'sidebarLogo',
-          value: val
-        });
-      }
+      tagsView: {
+        get() {
+          return settingsStore().tagsView
+        },
+        set(val) {
+          settingsStore().changeSetting({
+            key: 'tagsView',
+            value: val,
+          })
+        },
+      },
+      sidebarLogo: {
+        get() {
+          return settingsStore().sidebarLogo
+        },
+        set(val) {
+          settingsStore().changeSetting({
+            key: 'sidebarLogo',
+            value: val,
+          })
+        },
+      },
+      secondMenuPopup: {
+        get() {
+          return settingsStore().secondMenuPopup
+        },
+        set(val) {
+          settingsStore().changeSetting({
+            key: 'secondMenuPopup',
+            value: val,
+          })
+        },
+      },
     },
-    secondMenuPopup: {
-      get() {
-        return store.settings().secondMenuPopup;
+    methods: {
+      themeChange(val) {
+        settingsStore().changeSetting({
+          key: 'theme',
+          value: val,
+        })
       },
-      set(val) {
-        store.settings().changeSetting({
-          key: 'secondMenuPopup',
-          value: val
-        });
-      }
-    }
-  },
-  methods: {
-    themeChange(val) {
-      store.settings().changeSetting({
-        key: 'theme',
-        value: val
-      });
-    }
-  }
-});
+    },
+  })
 </script>
 
 <style lang="scss" scoped>
-.drawer-container {
-  padding: 24px;
-  font-size: 14px;
-  line-height: 1.5;
-  word-wrap: break-word;
-
-  .drawer-title {
-    margin-bottom: 12px;
-    color: rgba(0, 0, 0, .85);
+  .drawer-container {
+    padding: 24px;
     font-size: 14px;
-    line-height: 22px;
-  }
+    line-height: 1.5;
+    word-wrap: break-word;
 
-  .drawer-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: rgba(0, 0, 0, .65);
-    font-size: 14px;
-    padding: 12px 0;
-  }
+    .drawer-title {
+      margin-bottom: 12px;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 14px;
+      line-height: 22px;
+    }
 
-  .drawer-switch {
-    float: right
+    .drawer-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 14px;
+      padding: 12px 0;
+    }
+
+    .drawer-switch {
+      float: right;
+    }
   }
-}
 </style>

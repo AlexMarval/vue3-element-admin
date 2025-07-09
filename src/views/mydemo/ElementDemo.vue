@@ -1,22 +1,13 @@
 <script setup>
-import {
-  Check,
-  Delete,
-  Edit,
-  Loading,
-  Message,
-  Search,
-  Star
-} from '@element-plus/icons-vue';
-import store from '@/store';
-console.log('store=', store);
+  import { Check, Delete, Edit, Loading, Message, Search, Star } from '@element-plus/icons-vue'
+  import { useAppStore } from '@/store/modules/app'
 
-console.log('HomeView NODE_ENV=', process.env.NODE_ENV);
-console.log('HomeView VUE_APP_BASE_API=', process.env.VUE_APP_BASE_API);
+  console.log('HomeView NODE_ENV=', process.env.NODE_ENV)
+  console.log('HomeView VUE_APP_BASE_API=', process.env.VUE_APP_BASE_API)
 
-const useAppStore = store.app();
+  const useAppStoreInstance = useAppStore()
 
-console.log('appStore.device=', useAppStore.device);
+  console.log('appStore.device=', useAppStoreInstance.device)
 </script>
 
 <template>
@@ -64,7 +55,7 @@ console.log('appStore.device=', useAppStore.device);
     </div>
     <div>&nbsp;</div>
     <div>Ejemplo de iconos de Element</div>
-    <div style="font-size: 20px;">
+    <div style="font-size: 20px">
       <!-- Los iconos SVG no tienen atributos por defecto, debes proporcionarlos directamente -->
       <Edit style="width: 1em; height: 1em; margin-right: 8px" />
       <Star style="width: 1em; height: 1em; margin-right: 8px" />
@@ -80,16 +71,16 @@ console.log('appStore.device=', useAppStore.device);
 </template>
 
 <style lang="scss" scoped>
-.app-container {
-  div {
-    padding: 5px 0;
-  }
-  .mytitle {
-    font-size: 20px;
+  .app-container {
+    div {
+      padding: 5px 0;
+    }
+    .mytitle {
+      font-size: 20px;
 
-    .text {
-      font-size: 30px;
+      .text {
+        font-size: 30px;
+      }
     }
   }
-}
 </style>

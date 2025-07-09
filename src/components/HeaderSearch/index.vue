@@ -30,140 +30,140 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
-import Fuse from 'fuse.js';
-import path from 'path-browserify';
-import store from '@/store';
+  import { ref, computed, watch, onMounted, nextTick } from 'vue'
+  import Fuse from 'fuse.js'
+  import path from 'path-browserify'
+  import permissionStore from '@/store/modules/permission'
 
-interface RouteMeta {
-  hidden?: boolean;
-  title?: string;
-}
-
-interface AppRoute {
-  path: string;
-  meta?: RouteMeta;
-  redirect?: string;
-  children?: AppRoute[];
-}
-
-interface RouteItem {
-  path: string;
-  title: string[];
-}
-
-interface FuseResultItem {
-  item: RouteItem;
-  refIndex: number;
-}
-
-const search = ref('');
-const options = ref<FuseResultItem[]>([]);
-const searchPool = ref<RouteItem[]>([]);
-const show = ref(false);
-const fuse = ref<Fuse<RouteItem> | null>(null);
-const headerSearchSelect = ref<InstanceType<typeof HTMLElement> | null>(null);
-
-const routes = computed(() => store.permission().routes as AppRoute[]);
-
-watch(routes, (newRoutes) => {
-  searchPool.value = generateRoutes(newRoutes);
-});
-
-watch(searchPool, (list) => {
-  initFuse(list);
-});
-
-watch(show, (value) => {
-  if (value) {
-    document.body.addEventListener('click', close);
-  } else {
-    document.body.removeEventListener('click', close);
+  interface RouteMeta {
+    hidden?: boolean
+    title?: string
   }
-});
 
-onMounted(() => {
-  searchPool.value = generateRoutes(routes.value);
-});
-
-const click = (): void => {
-  show.value = !show.value;
-  if (show.value) {
-    headerSearchSelect.value?.focus();
+  interface AppRoute {
+    path: string
+    meta?: RouteMeta
+    redirect?: string
+    children?: AppRoute[]
   }
-};
 
-const close = (): void => {
-  headerSearchSelect.value?.blur();
-  options.value = [];
-  show.value = false;
-};
+  interface RouteItem {
+    path: string
+    title: string[]
+  }
 
-const change = (val: RouteItem): void => {
-  window.location.href = val.path;
-  search.value = '';
-  options.value = [];
-  nextTick(() => {
-    show.value = false;
-  });
-};
+  interface FuseResultItem {
+    item: RouteItem
+    refIndex: number
+  }
 
-const initFuse = (list: RouteItem[]): void => {
-  fuse.value = new Fuse(list, {
-    shouldSort: true,
-    threshold: 0.4,
-    location: 0,
-    distance: 100,
-    minMatchCharLength: 1,
-    keys: [
-      { name: 'title', weight: 0.7 },
-      { name: 'path', weight: 0.3 }
-    ]
-  });
-};
+  const search = ref('')
+  const options = ref<FuseResultItem[]>([])
+  const searchPool = ref<RouteItem[]>([])
+  const show = ref(false)
+  const fuse = ref<Fuse<RouteItem> | null>(null)
+  const headerSearchSelect = ref<InstanceType<typeof HTMLElement> | null>(null)
 
-const generateRoutes = (
-  routes: AppRoute[],
-  basePath: string = '/',
-  prefixTitle: string[] = []
-): RouteItem[] => {
-  let res: RouteItem[] = [];
+  const routes = computed(() => permissionStore().routes as AppRoute[])
 
-  for (const router of routes) {
-    if (router.meta?.hidden) continue;
+  watch(routes, newRoutes => {
+    searchPool.value = generateRoutes(newRoutes)
+  })
 
-    const data: RouteItem = {
-      path: path.resolve(basePath, router.path),
-      title: [...prefixTitle]
-    };
+  watch(searchPool, list => {
+    initFuse(list)
+  })
 
-    if (router.meta?.title) {
-      data.title.push(router.meta.title);
-      if (router.redirect !== 'noRedirect') {
-        res.push(data);
-      }
+  watch(show, value => {
+    if (value) {
+      document.body.addEventListener('click', close)
+    } else {
+      document.body.removeEventListener('click', close)
     }
+  })
 
-    if (router.children) {
-      const tempRoutes = generateRoutes(router.children, data.path, data.title);
-      if (tempRoutes.length) {
-        res = res.concat(tempRoutes);
-      }
+  onMounted(() => {
+    searchPool.value = generateRoutes(routes.value)
+  })
+
+  const click = (): void => {
+    show.value = !show.value
+    if (show.value) {
+      headerSearchSelect.value?.focus()
     }
   }
 
-  return res;
-};
-
-const querySearch = (query: string): void => {
-  if (query !== '') {
-    options.value = fuse.value?.search(query) ?? [];
-  } else {
-    options.value = [];
+  const close = (): void => {
+    headerSearchSelect.value?.blur()
+    options.value = []
+    show.value = false
   }
-};
+
+  const change = (val: RouteItem): void => {
+    window.location.href = val.path
+    search.value = ''
+    options.value = []
+    nextTick(() => {
+      show.value = false
+    })
+  }
+
+  const initFuse = (list: RouteItem[]): void => {
+    fuse.value = new Fuse(list, {
+      shouldSort: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 100,
+      minMatchCharLength: 1,
+      keys: [
+        { name: 'title', weight: 0.7 },
+        { name: 'path', weight: 0.3 },
+      ],
+    })
+  }
+
+  const generateRoutes = (
+    routes: AppRoute[],
+    basePath: string = '/',
+    prefixTitle: string[] = []
+  ): RouteItem[] => {
+    let res: RouteItem[] = []
+
+    for (const router of routes) {
+      if (router.meta?.hidden) continue
+
+      const data: RouteItem = {
+        path: path.resolve(basePath, router.path),
+        title: [...prefixTitle],
+      }
+
+      if (router.meta?.title) {
+        data.title.push(router.meta.title)
+        if (router.redirect !== 'noRedirect') {
+          res.push(data)
+        }
+      }
+
+      if (router.children) {
+        const tempRoutes = generateRoutes(router.children, data.path, data.title)
+        if (tempRoutes.length) {
+          res = res.concat(tempRoutes)
+        }
+      }
+    }
+
+    return res
+  }
+
+  const querySearch = (query: string): void => {
+    if (query !== '') {
+      options.value = fuse.value?.search(query) ?? []
+    } else {
+      options.value = []
+    }
+  }
 </script>
 
 <style scoped>
-/* Elimina todo lo que no sea tailwind */
+  /* Elimina todo lo que no sea tailwind */
 </style>

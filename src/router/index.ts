@@ -1,16 +1,16 @@
 // import { markRaw } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router'; // createWebHashHistory, createWebHistory
-import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router' // createWebHashHistory, createWebHistory
+import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router'
 // import { Help as IconHelp } from '@element-plus/icons-vue';
 
 /* Layout */
-const Layout = ():RouteComponent => import('@/layout/index.vue');
+const Layout = (): RouteComponent => import('@/layout/index.vue')
 
 /* Router Modules */
-import componentsRouter from './modules/components';
-import chartsRouter from './modules/charts';
-import nestedRouter from './modules/nested';
-import tableRouter from './modules/table';
+import componentsRouter from './modules/components'
+import chartsRouter from './modules/charts'
+import nestedRouter from './modules/nested'
+import tableRouter from './modules/table'
 
 /**
  * constantRoutes
@@ -19,7 +19,7 @@ import tableRouter from './modules/table';
  *
  * 注意：hidden、alwaysShow 属性配置移动到了meta中！！！
  */
-export const constantRoutes:RouteRecordRaw[] = [
+export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/redirect',
     component: Layout,
@@ -27,29 +27,29 @@ export const constantRoutes:RouteRecordRaw[] = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index.vue')
-      }
-    ]
+        component: () => import('@/views/redirect/index.vue'),
+      },
+    ],
   },
   {
     path: '/login',
     component: () => import('@/views/login/index.vue'),
-    meta: { hidden: true }
+    meta: { hidden: true },
   },
   {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect.vue'),
-    meta: { hidden: true }
+    meta: { hidden: true },
   },
   {
     path: '/404',
     component: () => import('@/views/error-page/404.vue'),
-    meta: { hidden: true }
+    meta: { hidden: true },
   },
   {
     path: '/401',
     component: () => import('@/views/error-page/401.vue'),
-    meta: { hidden: true }
+    meta: { hidden: true },
   },
   {
     path: '/',
@@ -60,9 +60,9 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         name: 'Dashboard',
-        meta: { title: 'Página Principal', icon: 'dashboard', affix: true }
-      }
-    ]
+        meta: { title: 'Página Principal', icon: 'dashboard', affix: true },
+      },
+    ],
   },
   {
     path: '/documentation',
@@ -72,9 +72,9 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/documentation/index.vue'),
         name: 'Documentation',
-        meta: { title: 'Documentación', icon: 'documentation', affix: true }
-      }
-    ]
+        meta: { title: 'Documentación', icon: 'documentation', affix: true },
+      },
+    ],
   },
   {
     path: '/guide',
@@ -85,9 +85,9 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/guide/index.vue'),
         name: 'Guide',
-        meta: { title: 'Guía', icon: 'guide', noCache: true }
-      }
-    ]
+        meta: { title: 'Guía', icon: 'guide', noCache: true },
+      },
+    ],
   },
   {
     path: '/profile',
@@ -99,11 +99,11 @@ export const constantRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/profile/index.vue'),
         name: 'Profile',
-        meta: { title: 'Perfil', icon: 'user', noCache: true }
-      }
-    ]
-  }
-];
+        meta: { title: 'Perfil', icon: 'user', noCache: true },
+      },
+    ],
+  },
+]
 
 /**
  * asyncRoutes
@@ -111,7 +111,7 @@ export const constantRoutes:RouteRecordRaw[] = [
  *
  * 注意：hidden、alwaysShow 属性配置移动到了meta中！！！
  */
-export const asyncRoutes:RouteRecordRaw[] = [
+export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: '/permission',
     component: Layout,
@@ -121,7 +121,7 @@ export const asyncRoutes:RouteRecordRaw[] = [
       alwaysShow: true, // will always show the root menu
       title: 'Permisos',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor'], // you can set roles in root nav
     },
     children: [
       {
@@ -130,17 +130,17 @@ export const asyncRoutes:RouteRecordRaw[] = [
         name: 'PagePermission',
         meta: {
           title: 'Permiso de Página',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+          roles: ['admin'], // or you can only set roles in sub nav
+        },
       },
       {
         path: 'directive',
         component: () => import('@/views/permission/directive.vue'),
         name: 'DirectivePermission',
         meta: {
-          title: 'Permiso por Directiva'
+          title: 'Permiso por Directiva',
           // if do not set roles, means: this page does not require permission
-        }
+        },
       },
       {
         path: 'role',
@@ -148,10 +148,10 @@ export const asyncRoutes:RouteRecordRaw[] = [
         name: 'RolePermission',
         meta: {
           title: 'Permiso por Rol',
-          roles: ['admin']
-        }
-      }
-    ]
+          roles: ['admin'],
+        },
+      },
+    ],
   },
 
   {
@@ -162,9 +162,9 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/icons/index.vue'),
         name: 'Icons',
-        meta: { title: 'Iconos', icon: 'icon', noCache: true }
-      }
-    ]
+        meta: { title: 'Iconos', icon: 'icon', noCache: true },
+      },
+    ],
   },
 
   // /** when your routing map is too long, you can split it into small modules **/
@@ -180,28 +180,33 @@ export const asyncRoutes:RouteRecordRaw[] = [
     name: 'Example',
     meta: {
       title: 'Ejemplo Integral',
-      icon: 'example'
+      icon: 'example',
     },
     children: [
       {
         path: 'create',
         component: () => import('@/views/example/create.vue'),
         name: 'CreateArticle',
-        meta: { title: 'Crear Artículo', icon: 'edit' }
+        meta: { title: 'Crear Artículo', icon: 'edit' },
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/example/edit.vue'),
         name: 'EditArticle',
-        meta: { hidden: true, title: 'Editar Artículo', noCache: true, activeMenu: '/example/list' }
+        meta: {
+          hidden: true,
+          title: 'Editar Artículo',
+          noCache: true,
+          activeMenu: '/example/list',
+        },
       },
       {
         path: 'list',
         component: () => import('@/views/example/list.vue'),
         name: 'ArticleList',
-        meta: { title: 'Lista de Artículos', icon: 'list' }
-      }
-    ]
+        meta: { title: 'Lista de Artículos', icon: 'list' },
+      },
+    ],
   },
 
   {
@@ -212,9 +217,9 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/tab/index.vue'),
         name: 'Tab',
-        meta: { title: 'Pestañas', icon: 'tab' }
-      }
-    ]
+        meta: { title: 'Pestañas', icon: 'tab' },
+      },
+    ],
   },
 
   {
@@ -224,22 +229,22 @@ export const asyncRoutes:RouteRecordRaw[] = [
     name: 'ErrorPages',
     meta: {
       title: 'Páginas de Error',
-      icon: '404'
+      icon: '404',
     },
     children: [
       {
         path: '401',
         component: () => import('@/views/error-page/401.vue'),
         name: 'Page401',
-        meta: { title: '401', noCache: true }
+        meta: { title: '401', noCache: true },
       },
       {
         path: '404',
         component: () => import('@/views/error-page/404.vue'),
         name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
+        meta: { title: '404', noCache: true },
+      },
+    ],
   },
 
   {
@@ -250,9 +255,9 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'log',
         component: () => import('@/views/error-log/index.vue'),
         name: 'ErrorLog',
-        meta: { title: 'Registro de Errores', icon: 'bug' }
-      }
-    ]
+        meta: { title: 'Registro de Errores', icon: 'bug' },
+      },
+    ],
   },
 
   {
@@ -262,34 +267,34 @@ export const asyncRoutes:RouteRecordRaw[] = [
     name: 'Excel',
     meta: {
       title: 'Excel',
-      icon: 'excel'
+      icon: 'excel',
     },
     children: [
       {
         path: 'export-excel',
         component: () => import('@/views/excel/export-excel.vue'),
         name: 'ExportExcel',
-        meta: { title: 'Exportar Excel' }
+        meta: { title: 'Exportar Excel' },
       },
       {
         path: 'export-selected-excel',
         component: () => import('@/views/excel/select-excel.vue'),
         name: 'SelectExcel',
-        meta: { title: 'Exportar Seleccionados' }
+        meta: { title: 'Exportar Seleccionados' },
       },
       {
         path: 'export-merge-header',
         component: () => import('@/views/excel/merge-header.vue'),
         name: 'MergeHeader',
-        meta: { title: 'Exportar Encabezado Múltiple' }
+        meta: { title: 'Exportar Encabezado Múltiple' },
       },
       {
         path: 'upload-excel',
         component: () => import('@/views/excel/upload-excel.vue'),
         name: 'UploadExcel',
-        meta: { title: 'Subir Excel' }
-      }
-    ]
+        meta: { title: 'Subir Excel' },
+      },
+    ],
   },
 
   {
@@ -303,9 +308,9 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'download',
         component: () => import('@/views/zip/index.vue'),
         name: 'ExportZip',
-        meta: { title: 'Exportar Zip' }
-      }
-    ]
+        meta: { title: 'Exportar Zip' },
+      },
+    ],
   },
 
   {
@@ -317,14 +322,14 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/pdf/index.vue'),
         name: 'PDF',
-        meta: { title: 'PDF', icon: 'pdf' }
-      }
-    ]
+        meta: { title: 'PDF', icon: 'pdf' },
+      },
+    ],
   },
   {
     path: '/pdf/download',
     component: () => import('@/views/pdf/download.vue'),
-    meta: { hidden: true }
+    meta: { hidden: true },
   },
 
   {
@@ -335,9 +340,9 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/theme/index.vue'),
         name: 'Theme',
-        meta: { title: 'Tema', icon: 'theme' }
-      }
-    ]
+        meta: { title: 'Tema', icon: 'theme' },
+      },
+    ],
   },
 
   {
@@ -348,9 +353,9 @@ export const asyncRoutes:RouteRecordRaw[] = [
         path: 'index',
         component: () => import('@/views/clipboard/index.vue'),
         name: 'ClipboardDemo',
-        meta: { title: 'Portapapeles', icon: 'clipboard' }
-      }
-    ]
+        meta: { title: 'Portapapeles', icon: 'clipboard' },
+      },
+    ],
   },
 
   {
@@ -360,61 +365,62 @@ export const asyncRoutes:RouteRecordRaw[] = [
       {
         path: 'https://element-plus.midfar.com',
         meta: { title: 'Enlace Externo', icon: 'link' },
-        redirect: ''
-      }
-    ]
+        redirect: '',
+      },
+    ],
   },
 
   {
-    path: '/my-demo',
+    path: '/mydemo',
     component: Layout,
     name: 'MyDemo',
     meta: {
       title: 'Mi Ejemplo',
-      icon: 'component'
+      icon: 'component',
     },
     children: [
       {
         path: 'element-demo',
         component: () => import('@/views/mydemo/ElementDemo.vue'),
         name: 'ElementDemo',
-        meta: { title: 'Ejemplo Element', icon: 'skill' }
+        meta: { title: 'Ejemplo Element', icon: 'skill' },
       },
       {
         path: 'store-demo',
         component: () => import('@/views/mydemo/StoreDemo.vue'),
         name: 'StoreDemo',
-        meta: { title: 'Ejemplo Store', icon: 'lock' }
-      }
-    ]
+        meta: { title: 'Ejemplo Store', icon: 'lock' },
+      },
+    ],
   },
 
   // 404 page must be placed at the end !!!
-  { path: '/:pathMatch(.*)*', redirect: '/404', meta: { hidden: true }}
-];
+  { path: '/:pathMatch(.*)*', redirect: '/404', meta: { hidden: true } },
+]
 
-console.log('BASE_URL=', import.meta.env);
+console.log('BASE_URL=', import.meta.env)
 
-const createTheRouter = ():Router => createRouter({
-  // history: createWebHashHistory(import.meta.env.BASE_URL),
-  // 注意，如果要配置 HTML5 模式，则需要修改nginx配置，参考资料：
-  // https://router.vuejs.org/zh/guide/essentials/history-mode.html
-  history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior: () => ({ top: 0 }),
-  routes: constantRoutes
-});
+const createTheRouter = (): Router =>
+  createRouter({
+    // history: createWebHashHistory(import.meta.env.BASE_URL),
+    // 注意，如果要配置 HTML5 模式，则需要修改nginx配置，参考资料：
+    // https://router.vuejs.org/zh/guide/essentials/history-mode.html
+    history: createWebHistory(import.meta.env.BASE_URL),
+    scrollBehavior: () => ({ top: 0 }),
+    routes: constantRoutes,
+  })
 
 interface RouterPro extends Router {
-  matcher: unknown;
+  matcher: unknown
 }
 
-const router = createTheRouter() as RouterPro;
+const router = createTheRouter() as RouterPro
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   // router.clearRoutes(); RangeError: Maximum call stack size exceeded
-  const newRouter = createTheRouter() as RouterPro;
-  router.matcher = newRouter.matcher; // reset router
+  const newRouter = createTheRouter() as RouterPro
+  router.matcher = newRouter.matcher // reset router
 }
 
-export default router;
+export default router

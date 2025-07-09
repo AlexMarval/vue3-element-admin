@@ -1,7 +1,11 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
-      @toggleClick="toggleSidebar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSidebar"
+    />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
@@ -16,12 +20,11 @@
         <el-tooltip content="Tamaño global de los componentes" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
           <el-icon class="el-icon-caret-bottom" size="small">
             <CaretBottom />
           </el-icon>
@@ -41,7 +44,7 @@
               <el-dropdown-item>Documentación</el-dropdown-item>
             </a>
             <el-dropdown-item divided @click="logout">
-              <span style="display:block;">Cerrar sesión</span>
+              <span style="display: block">Cerrar sesión</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -51,131 +54,129 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
-import store from '@/store';
-import Breadcrumb from '@/components/Breadcrumb';
-import Hamburger from '@/components/Hamburger';
-import ErrorLog from '@/components/ErrorLog';
-import Screenfull from '@/components/Screenfull';
-import SizeSelect from '@/components/SizeSelect';
-import Search from '@/components/HeaderSearch';
-import { defineComponent } from 'vue';
-import { CaretBottom } from '@element-plus/icons-vue';
+  import { mapState } from 'pinia'
+  import { useAppStore } from '@/store/modules/app'
+  import settingsStore from '@/store/modules/settings'
+  import userStore from '@/store/modules/user'
+  import Breadcrumb from '@/components/Breadcrumb'
+  import Hamburger from '@/components/Hamburger'
+  import ErrorLog from '@/components/ErrorLog'
+  import Screenfull from '@/components/Screenfull'
+  import SizeSelect from '@/components/SizeSelect'
+  import Search from '@/components/HeaderSearch'
+  import { defineComponent } from 'vue'
+  import { CaretBottom } from '@element-plus/icons-vue'
 
-export default defineComponent({
-  components: {
-    Breadcrumb,
-    Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search,
-    CaretBottom
-  },
-  computed: {
-    ...mapState(store.app, [
-      'sidebar',
-      'device'
-    ]),
-    ...mapState(store.user, [
-      'avatar'
-    ])
-  },
-  methods: {
-    toggleSidebar() {
-      store.app().toggleSidebar();
+  export default defineComponent({
+    components: {
+      Breadcrumb,
+      Hamburger,
+      ErrorLog,
+      Screenfull,
+      SizeSelect,
+      Search,
+      CaretBottom,
     },
-    async logout() {
-      await store.user().logout();
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
-    }
-  }
-});
+    computed: {
+      ...mapState(useAppStore, ['device', 'sidebar']),
+      ...mapState(settingsStore, ['sidebarLogo']),
+      ...mapState(userStore, ['avatar']),
+    },
+    methods: {
+      toggleSidebar() {
+        useAppStore().toggleSidebar()
+      },
+      async logout() {
+        await store.user().logout()
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      },
+    },
+  })
 </script>
 
 <style lang="scss" scoped>
-.navbar {
-  width: 100%;
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  .navbar {
+    width: 100%;
+    height: 50px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color: transparent;
+    .hamburger-container {
+      line-height: 46px;
+      height: 100%;
+      float: left;
+      cursor: pointer;
+      transition: background 0.3s;
+      -webkit-tap-highlight-color: transparent;
 
-    &:hover {
-      background: rgba(0, 0, 0, .025)
-    }
-  }
-
-  .breadcrumb-container {
-    float: left;
-  }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  .right-menu {
-    float: right;
-    height: 100%;
-    line-height: 50px;
-
-    &:focus {
-      outline: none;
+      &:hover {
+        background: rgba(0, 0, 0, 0.025);
+      }
     }
 
-    .right-menu-item {
+    .breadcrumb-container {
+      float: left;
+    }
+
+    .errLog-container {
       display: inline-block;
-      padding: 0 8px;
+      vertical-align: top;
+    }
+
+    .right-menu {
+      float: right;
       height: 100%;
       line-height: 50px;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
 
-      &.hover-effect {
-        cursor: pointer;
-        transition: background .3s;
+      &:focus {
+        outline: none;
+      }
 
-        &:hover {
-          background: rgba(0, 0, 0, .025)
+      .right-menu-item {
+        display: inline-block;
+        padding: 0 8px;
+        height: 100%;
+        line-height: 50px;
+        font-size: 18px;
+        color: #5a5e66;
+        vertical-align: text-bottom;
+
+        &.hover-effect {
+          cursor: pointer;
+          transition: background 0.3s;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.025);
+          }
         }
       }
-    }
 
-    .avatar-container {
-      margin-right: 30px;
+      .avatar-container {
+        margin-right: 30px;
 
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-        height: 45px;
+        .avatar-wrapper {
+          margin-top: 5px;
+          position: relative;
+          height: 45px;
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
+          .user-avatar {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+          }
 
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+          .el-icon-caret-bottom {
+            cursor: pointer;
+            position: absolute;
+            right: -20px;
+            top: 25px;
+            font-size: 12px;
+          }
         }
       }
     }
   }
-}
 </style>

@@ -2,7 +2,6 @@
   <div class="app-container">
     <div v-if="user">
       <el-row :gutter="20">
-
         <el-col :span="6" :xs="24">
           <user-card :user="user" />
         </el-col>
@@ -22,56 +21,49 @@
             </el-tabs>
           </el-card>
         </el-col>
-
       </el-row>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'pinia';
-import UserCard from './components/UserCard';
-import Activity from './components/Activity';
-import Timeline from './components/Timeline';
-import Account from './components/Account';
-import { defineComponent } from 'vue';
-import store from '@/store';
-// const userStore = store.user();
+  import { mapState } from 'pinia'
+  import UserCard from './components/UserCard'
+  import Activity from './components/Activity'
+  import Timeline from './components/Timeline'
+  import Account from './components/Account'
+  import { defineComponent } from 'vue'
+  import userStore from '@/store/modules/user'
 
-export default defineComponent({
-  name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
-  data() {
-    return {
-      user: {},
-      activeTab: 'activity'
-    };
-  },
-  computed: {
-    ...mapState(store.user, [
-      'name',
-      'avatar',
-      'roles'
-    ])
-    // userStore,
-  },
-  watch: {
-    name(newVal) {
-      this.user.name = newVal;
-    }
-  },
-  created() {
-    this.getUser();
-  },
-  methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        role: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      };
-    }
-  }
-});
+  export default defineComponent({
+    name: 'Profile',
+    components: { UserCard, Activity, Timeline, Account },
+    data() {
+      return {
+        user: {},
+        activeTab: 'activity',
+      }
+    },
+    computed: {
+      ...mapState(userStore, ['name', 'avatar', 'roles']),
+    },
+    watch: {
+      name(newVal) {
+        this.user.name = newVal
+      },
+    },
+    created() {
+      this.getUser()
+    },
+    methods: {
+      getUser() {
+        this.user = {
+          name: this.name,
+          role: this.roles.join(' | '),
+          email: 'admin@test.com',
+          avatar: this.avatar,
+        }
+      },
+    },
+  })
 </script>

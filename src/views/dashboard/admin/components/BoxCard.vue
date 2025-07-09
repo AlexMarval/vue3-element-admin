@@ -1,14 +1,14 @@
 <template>
-  <el-card class="box-card-component" style="margin-left:8px;">
+  <el-card class="box-card-component" style="margin-left: 8px">
     <template #header>
       <div class="box-card-header">
-        <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
+        <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png" />
       </div>
     </template>
-    <div style="position:relative;">
+    <div style="position: relative">
       <pan-thumb :image="avatar" class="panThumb" />
       <mallki class-name="mallki-text" text="vue-element-admin" />
-      <div style="padding-top:35px;" class="progress-item">
+      <div style="padding-top: 35px" class="progress-item">
         <span>Vue</span>
         <el-progress :percentage="70" />
       </div>
@@ -29,92 +29,88 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
-import PanThumb from '@/components/PanThumb';
-import Mallki from '@/components/TextHoverEffect/Mallki';
-import { defineComponent } from 'vue';
-import store from '@/store';
+  import { mapState } from 'pinia'
+  import PanThumb from '@/components/PanThumb'
+  import Mallki from '@/components/TextHoverEffect/Mallki'
+  import { defineComponent } from 'vue'
+  import userStore from '@/store/modules/user'
 
-export default defineComponent({
-  components: { PanThumb, Mallki },
+  export default defineComponent({
+    components: { PanThumb, Mallki },
 
-  data() {
-    return {
-      statisticsData: {
-        article_count: 1024,
-        pageviews_count: 1024
+    data() {
+      return {
+        statisticsData: {
+          article_count: 1024,
+          pageviews_count: 1024,
+        },
       }
-    };
-  },
-  computed: {
-    ...mapState(store.user, [
-      'name',
-      'avatar',
-      'roles'
-    ])
-  }
-});
+    },
+    computed: {
+      ...mapState(userStore, ['name', 'avatar', 'roles']),
+    },
+  })
 </script>
 
-<style lang="scss" >
-.box-card-component {
-  .el-card__header {
-    padding: 0px !important;
+<style lang="scss">
+  .box-card-component {
+    .el-card__header {
+      padding: 0px !important;
+    }
   }
-}
 </style>
 <style lang="scss" scoped>
-.box-card-component {
-  .box-card-header {
-    position: relative;
-    height: 220px;
+  .box-card-component {
+    .box-card-header {
+      position: relative;
+      height: 220px;
 
-    img {
-      width: 100%;
-      height: 100%;
-      transition: all 0.2s linear;
+      img {
+        width: 100%;
+        height: 100%;
+        transition: all 0.2s linear;
 
-      &:hover {
-        transform: scale(1.1, 1.1);
-        filter: contrast(130%);
+        &:hover {
+          transform: scale(1.1, 1.1);
+          filter: contrast(130%);
+        }
+      }
+    }
+
+    .mallki-text {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .panThumb {
+      z-index: 100;
+      height: 70px !important;
+      width: 70px !important;
+      position: absolute !important;
+      top: -45px;
+      left: 0px;
+      border: 5px solid #ffffff;
+      background-color: #fff;
+      margin: auto;
+      box-shadow: none !important;
+
+      :deep(.pan-info) {
+        box-shadow: none !important;
+      }
+    }
+
+    .progress-item {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    @media only screen and (max-width: 1510px) {
+      .mallki-text {
+        display: none;
       }
     }
   }
-
-  .mallki-text {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    font-size: 20px;
-    font-weight: bold;
-  }
-
-  .panThumb {
-    z-index: 100;
-    height: 70px !important;
-    width: 70px !important;
-    position: absolute !important;
-    top: -45px;
-    left: 0px;
-    border: 5px solid #ffffff;
-    background-color: #fff;
-    margin: auto;
-    box-shadow: none !important;
-
-    :deep(.pan-info) {
-      box-shadow: none !important;
-    }
-  }
-
-  .progress-item {
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-
-  @media only screen and (max-width: 1510px) {
-    .mallki-text {
-      display: none;
-    }
-  }
-}
 </style>

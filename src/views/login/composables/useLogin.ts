@@ -1,7 +1,7 @@
 import { ref, reactive, watch, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import store from '@/store'
+import userStore from '@/store/modules/user'
 import { validUsername } from '@/utils/validate'
 import { useNotification } from '@/components/Notification'
 
@@ -39,6 +39,8 @@ export function useLogin() {
     nextTick(() => {})
   }
 
+  const user = userStore()
+
   const handleLogin = () => {
     if (!loginForm.username || !validUsername(loginForm.username)) {
       warning('Por favor ingresa un usuario válido', 'Advertencia')
@@ -52,8 +54,7 @@ export function useLogin() {
 
     loading.value = true
 
-    store
-      .user()
+    user
       .login(loginForm)
       .then(() => {
         success('¡Inicio de sesión exitoso!', 'Éxito')
