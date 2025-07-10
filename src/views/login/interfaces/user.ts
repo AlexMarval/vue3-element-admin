@@ -14,6 +14,7 @@ export interface AuthUser {
   name: string
   mail: string
   dn: string
+  roles: string[]
   jwt: string
   avatar?: string
 }

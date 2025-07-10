@@ -32,14 +32,16 @@ export const useAuthStore = defineStore('user', () => {
   // get user info (check token)
   const getInfo = async () => {
     const user = await apiCheckAuthToken(token.value)
+
     if (!user) {
       throw new Error('Verificación fallida, por favor inicie sesión de nuevo.')
     }
+
     name.value = user.name
-    // Si el backend no provee avatar, usar uno por defecto
     avatar.value = user.avatar || new URL('@/assets/avatar-default.gif', import.meta.url).href
     introduction.value = ''
     roles.value = ['admin']
+
     return user
   }
 
