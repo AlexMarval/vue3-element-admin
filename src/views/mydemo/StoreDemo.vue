@@ -20,7 +20,7 @@
   import { mapStores, mapState, mapActions } from 'pinia'
   import { defineComponent } from 'vue'
   import { useAppStore } from '@/store/modules/app'
-  import userStore from '@/store/modules/user'
+  import { useAuthStore } from '@/store/modules/user'
 
   export default defineComponent({
     name: 'StoreDemo',

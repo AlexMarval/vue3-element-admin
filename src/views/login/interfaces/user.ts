@@ -9,3 +9,11 @@ export interface UserInfo {
   roles: string[]
   introduction?: string
 }
+
+export interface AuthUser {
+  name: string
+  mail: string
+  dn: string
+  jwt: string
+  avatar?: string
+}

@@ -33,7 +33,7 @@
   import PanThumb from '@/components/PanThumb'
   import Mallki from '@/components/TextHoverEffect/Mallki'
   import { defineComponent } from 'vue'
-  import userStore from '@/store/modules/user'
+  import { useAuthStore } from '@/store/modules/user'
 
   export default defineComponent({
     components: { PanThumb, Mallki },
@@ -47,7 +47,7 @@
       }
     },
     computed: {
-      ...mapState(userStore, ['name', 'avatar', 'roles']),
+      ...mapState(useAuthStore, ['name', 'avatar', 'roles']),
     },
   })
 </script>

@@ -1,15 +1,19 @@
-import Cookies from 'js-cookie';
+const TokenKey = 'jwt'
 
-const TokenKey = 'Admin-Token';
-
-export function getToken() {
-  return Cookies.get(TokenKey);
+export const getToken = () => {
+  const data = localStorage.getItem(TokenKey)
+  if (!data) return ''
+  try {
+    return JSON.parse(data).jwt || ''
+  } catch {
+    return ''
+  }
 }
 
-export function setToken(token) {
-  return Cookies.set(TokenKey, token);
+export const setToken = token => {
+  localStorage.setItem(TokenKey, JSON.stringify({ jwt: token }))
 }
 
-export function removeToken() {
-  return Cookies.remove(TokenKey);
+export const removeToken = () => {
+  localStorage.removeItem(TokenKey)
 }

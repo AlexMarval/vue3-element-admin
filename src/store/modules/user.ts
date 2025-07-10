@@ -1,127 +1,84 @@
-import { defineStore } from 'pinia';
-import { login as apiLogin, logout as apiLogout, getInfo as apiGetInfo } from '@/api/user';
-import { getToken, setToken, removeToken } from '@/utils/auth';
-import router, { resetRouter } from '@/router';
-import tagsViewStore from './tagsView';
-import permissionStore from './permission';
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import router, { resetRouter } from '@/router'
 
-export interface IUserState {
-  token: string;
-  userId: string,
-  name: string;
-  avatar: string;
-  introduction: string;
-  roles: string[];
-}
+import { login as apiLogin, checkAuthToken as apiCheckAuthToken } from '@/views/login/api/auth'
+import { getToken, setToken, removeToken } from '@/utils/auth'
+import tagsViewStore from './tagsView'
+import { ca } from 'element-plus/es/locales.mjs'
 
-export default defineStore({
-  id: 'user',
-  state: ():IUserState => ({
-    token: getToken(),
-    userId: '',
-    name: '',
-    avatar: '',
-    introduction: '',
-    roles: []
-  }),
-  getters: {},
-  actions: {
-    // user login
-    login(userInfo):Promise<void> {
-      const { username, password } = userInfo;
-      return new Promise((resolve, reject) => {
-        apiLogin({ username: username.trim(), password: password }).then(response => {
-          const { data } = response;
-          this.token = data.token;
-          setToken(data.token);
-          resolve();
-        }).catch(error => {
-          reject(error);
-        });
-      });
-    },
+export const useAuthStore = defineStore('user', () => {
+  const token = ref(getToken() || '')
+  const userId = ref('')
+  const name = ref('')
+  const avatar = ref('')
+  const introduction = ref('')
+  const roles = ref<string[]>([])
 
-    // get user info
-    getInfo() {
-      return new Promise((resolve, reject) => {
-        apiGetInfo(this.token).then(response => {
-          const { data } = response;
+  // user login
+  const login = async (userInfo: { username: string; password: string }) => {
+    try {
+      const { username, password } = userInfo
 
-          if (!data) {
-            reject('Verification failed, please Login again.');
-          }
+      const response = await apiLogin({ username: username.trim(), password })
+      token.value = response
 
-          const { roles, name, avatar, introduction } = data;
-
-          // roles must be a non-empty array
-          if (!roles || roles.length <= 0) {
-            reject('getInfo: roles must be a non-null array!');
-          }
-
-          this.roles = roles;
-          this.name = name;
-          this.avatar = avatar;
-          this.introduction = introduction;
-          resolve(data);
-        }).catch(error => {
-          reject(error);
-        });
-      });
-    },
-
-    // user logout
-    logout():Promise<void> {
-      return new Promise((resolve, reject) => {
-        apiLogout(this.token).then(() => {
-          this.token = '';
-          this.roles = [];
-          removeToken();
-          resetRouter();
-
-          // reset visited views and cached views
-          // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-          tagsViewStore().delAllViews();
-
-          resolve();
-        }).catch(error => {
-          reject(error);
-        });
-      });
-    },
-
-    // remove token
-    resetToken() {
-      this.token = '';
-      this.roles = [];
-      removeToken();
-    },
-
-    // dynamically modify permissions
-    async changeRoles(role) {
-      const token = role + '-token';
-
-      this.token = token;
-      setToken(token);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const infoRes = await this.getInfo() as any;
-      let roles = [];
-      if (infoRes.roles) {
-        roles = infoRes.roles;
-      }
-
-      resetRouter();
-
-      // generate accessible routes map based on roles
-      const accessRoutes = await permissionStore().generateRoutes(roles);
-      // dynamically add accessible routes
-      // router.addRoutes(accessRoutes);
-      accessRoutes.forEach(item => {
-        router.addRoute(item);
-      });
-
-      // reset visited views and cached views
-      tagsViewStore().delAllViews();
+      setToken(response)
+    } catch (error) {
+      console.error('Error during login:', error)
     }
   }
-});
+
+  // get user info (check token)
+  const getInfo = async () => {
+    const user = await apiCheckAuthToken(token.value)
+    if (!user) {
+      throw new Error('Verificación fallida, por favor inicie sesión de nuevo.')
+    }
+    name.value = user.name
+    // Si el backend no provee avatar, usar uno por defecto
+    avatar.value = user.avatar || new URL('@/assets/avatar-default.gif', import.meta.url).href
+    introduction.value = ''
+    roles.value = ['admin']
+    return user
+  }
+
+  // user logout
+  const logout = () => {
+    token.value = ''
+    roles.value = []
+    removeToken()
+    resetRouter()
+    tagsViewStore().delAllViews()
+  }
+
+  // remove token
+  const resetToken = () => {
+    token.value = ''
+    roles.value = []
+    removeToken()
+  }
+
+  // dynamically modify permissions
+  const changeRoles = async (role: string) => {
+    const newToken = role + '-token'
+    token.value = newToken
+    setToken(newToken)
+    resetRouter()
+    tagsViewStore().delAllViews()
+  }
+
+  return {
+    token,
+    userId,
+    name,
+    avatar,
+    introduction,
+    roles,
+    login,
+    getInfo,
+    logout,
+    resetToken,
+    changeRoles,
+  }
+})

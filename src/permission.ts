@@ -1,5 +1,5 @@
 import router from './router'
-import userStore from './store/modules/user'
+import { useAuthStore } from './store/modules/user'
 import permissionStore from './store/modules/permission'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
@@ -21,7 +21,7 @@ router.beforeEach(async (to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  const user = userStore()
+  const user = useAuthStore()
   const permission = permissionStore()
 
   if (hasToken) {

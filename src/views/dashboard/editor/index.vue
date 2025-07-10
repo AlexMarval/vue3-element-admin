@@ -21,10 +21,10 @@
 
 <script>
   import { mapState } from 'pinia'
+  import { useAuthStore } from '@/store/modules/user'
   import PanThumb from '@/components/PanThumb'
   import GithubCorner from '@/components/GithubCorner'
   import { defineComponent } from 'vue'
-  import userStore from '@/store/modules/user'
 
   export default defineComponent({
     name: 'DashboardEditor',
@@ -35,7 +35,7 @@
       }
     },
     computed: {
-      ...mapState(userStore, ['name', 'avatar', 'roles']),
+      ...mapState(useAuthStore, ['name', 'avatar', 'roles']),
     },
   })
 </script>

@@ -57,7 +57,7 @@
   import { mapState } from 'pinia'
   import { useAppStore } from '@/store/modules/app'
   import settingsStore from '@/store/modules/settings'
-  import userStore from '@/store/modules/user'
+  import { useAuthStore } from '@/store/modules/user'
   import Breadcrumb from '@/components/Breadcrumb'
   import Hamburger from '@/components/Hamburger'
   import ErrorLog from '@/components/ErrorLog'
@@ -80,7 +80,7 @@
     computed: {
       ...mapState(useAppStore, ['device', 'sidebar']),
       ...mapState(settingsStore, ['sidebarLogo']),
-      ...mapState(userStore, ['avatar']),
+      ...mapState(useAuthStore, ['avatar']),
     },
     methods: {
       toggleSidebar() {

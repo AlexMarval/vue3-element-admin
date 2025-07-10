@@ -1,7 +1,7 @@
 import { ref, reactive, watch, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import userStore from '@/store/modules/user'
+import { useAuthStore } from '@/store/modules/user'
 import { validUsername } from '@/utils/validate'
 import { useNotification } from '@/components/Notification'
 
@@ -14,8 +14,8 @@ export function useLogin() {
   const { success, error, warning, info } = useNotification()
 
   const loginForm = reactive({
-    username: 'admin',
-    password: '111111',
+    username: 'alexander.marval',
+    password: 'Alagm5113',
   })
 
   const passwordType = ref<LoginFieldType>(LoginFieldType.Password)
@@ -39,7 +39,7 @@ export function useLogin() {
     nextTick(() => {})
   }
 
-  const user = userStore()
+  const user = useAuthStore()
 
   const handleLogin = () => {
     if (!loginForm.username || !validUsername(loginForm.username)) {
@@ -61,7 +61,7 @@ export function useLogin() {
         router.push({ path: redirect.value || '/', query: otherQuery.value })
         loading.value = false
       })
-      .catch(() => {
+      .catch(error => {
         error('Error al iniciar sesión. Intenta de nuevo.', 'Error')
         loading.value = false
       })
