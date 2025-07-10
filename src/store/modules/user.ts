@@ -44,12 +44,17 @@ export const useAuthStore = defineStore('user', () => {
   }
 
   // user logout
-  const logout = () => {
+  const logout = async () => {
     token.value = ''
     roles.value = []
+    name.value = ''
+    avatar.value = ''
+    introduction.value = ''
     removeToken()
     resetRouter()
     tagsViewStore().delAllViews()
+    await router.push({ path: '/login' })
+    // Puedes agregar notificación aquí si lo deseas
   }
 
   // remove token

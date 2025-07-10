@@ -1,7 +1,7 @@
 // import { markRaw } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router' // createWebHashHistory, createWebHistory
 import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router'
-// import { Help as IconHelp } from '@element-plus/icons-vue';
+import { AppRoute } from './routes'
 
 /* Layout */
 const Layout = (): RouteComponent => import('@/layout/index.vue')
@@ -17,44 +17,44 @@ import tableRouter from './modules/table'
  * a base page that does not have permission requirements
  * all roles can be accessed
  *
- * 注意：hidden、alwaysShow 属性配置移动到了meta中！！！
+ * Nota: ¡La configuración de los atributos hidden y alwaysShow se ha movido a meta!
  */
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    path: '/redirect',
+    path: AppRoute.REDIRECT,
     component: Layout,
     meta: { hidden: true },
     children: [
       {
-        path: '/redirect/:path(.*)',
+        path: AppRoute.REDIRECT_PATH,
         component: () => import('@/views/redirect/index.vue'),
       },
     ],
   },
   {
-    path: '/login',
+    path: AppRoute.LOGIN,
     component: () => import('@/views/login/index.vue'),
     meta: { hidden: true },
   },
   {
-    path: '/auth-redirect',
+    path: AppRoute.AUTH_REDIRECT,
     component: () => import('@/views/login/auth-redirect.vue'),
     meta: { hidden: true },
   },
   {
-    path: '/404',
+    path: AppRoute.ERROR_404,
     component: () => import('@/views/error-page/404.vue'),
     meta: { hidden: true },
   },
   {
-    path: '/401',
+    path: AppRoute.ERROR_401,
     component: () => import('@/views/error-page/401.vue'),
     meta: { hidden: true },
   },
   {
-    path: '/',
+    path: AppRoute.HOME,
     component: Layout,
-    redirect: '/dashboard',
+    redirect: AppRoute.DASHBOARD,
     children: [
       {
         path: 'dashboard',
@@ -65,7 +65,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/documentation',
+    path: AppRoute.DOCUMENTATION,
     component: Layout,
     children: [
       {
@@ -77,7 +77,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/guide',
+    path: AppRoute.GUIDE,
     component: Layout,
     redirect: '/guide/index',
     children: [
@@ -90,7 +90,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/profile',
+    path: AppRoute.PROFILE,
     component: Layout,
     redirect: '/profile/index',
     meta: { hidden: true },
@@ -109,11 +109,11 @@ export const constantRoutes: RouteRecordRaw[] = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  *
- * 注意：hidden、alwaysShow 属性配置移动到了meta中！！！
+ * Nota: ¡La configuración de los atributos hidden y alwaysShow se ha movido a meta!
  */
 export const asyncRoutes: RouteRecordRaw[] = [
   {
-    path: '/permission',
+    path: AppRoute.PERMISSION,
     component: Layout,
     redirect: '/permission/page',
     name: 'Permission',
@@ -155,7 +155,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/icon',
+    path: AppRoute.ICON,
     component: Layout,
     children: [
       {
@@ -174,7 +174,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   tableRouter,
 
   {
-    path: '/example',
+    path: AppRoute.EXAMPLE,
     component: Layout,
     redirect: '/example/list',
     name: 'Example',
@@ -210,7 +210,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/tab',
+    path: AppRoute.TAB,
     component: Layout,
     children: [
       {
@@ -223,7 +223,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/error',
+    path: AppRoute.ERROR,
     component: Layout,
     redirect: 'noRedirect',
     name: 'ErrorPages',
@@ -248,7 +248,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/error-log',
+    path: AppRoute.ERROR_LOG,
     component: Layout,
     children: [
       {
@@ -261,7 +261,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/excel',
+    path: AppRoute.EXCEL,
     component: Layout,
     redirect: '/excel/export-excel',
     name: 'Excel',
@@ -298,7 +298,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/zip',
+    path: AppRoute.ZIP,
     component: Layout,
     redirect: '/zip/download',
     name: 'Zip',
@@ -314,7 +314,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/pdf',
+    path: AppRoute.PDF,
     component: Layout,
     redirect: '/pdf/index',
     children: [
@@ -327,13 +327,13 @@ export const asyncRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/pdf/download',
+    path: AppRoute.PDF_DOWNLOAD,
     component: () => import('@/views/pdf/download.vue'),
     meta: { hidden: true },
   },
 
   {
-    path: '/theme',
+    path: AppRoute.THEME,
     component: Layout,
     children: [
       {
@@ -346,7 +346,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/clipboard',
+    path: AppRoute.CLIPBOARD,
     component: Layout,
     children: [
       {
@@ -359,7 +359,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/external-link',
+    path: AppRoute.EXTERNAL_LINK,
     component: Layout,
     children: [
       {
@@ -371,7 +371,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/mydemo',
+    path: AppRoute.MYDEMO,
     component: Layout,
     name: 'MyDemo',
     meta: {
@@ -393,9 +393,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-
-  // 404 page must be placed at the end !!!
-  { path: '/:pathMatch(.*)*', redirect: '/404', meta: { hidden: true } },
+  { path: '/:pathMatch(.*)*', redirect: AppRoute.ERROR_404, meta: { hidden: true } },
 ]
 
 console.log('BASE_URL=', import.meta.env)
@@ -403,8 +401,8 @@ console.log('BASE_URL=', import.meta.env)
 const createTheRouter = (): Router =>
   createRouter({
     // history: createWebHashHistory(import.meta.env.BASE_URL),
-    // 注意，如果要配置 HTML5 模式，则需要修改nginx配置，参考资料：
-    // https://router.vuejs.org/zh/guide/essentials/history-mode.html
+    // Nota: para configurar el modo HTML5, es necesario modificar la configuración de nginx, ver documentación:
+    // https://router.vuejs.org/guide/essentials/history-mode.html
     history: createWebHistory(import.meta.env.BASE_URL),
     scrollBehavior: () => ({ top: 0 }),
     routes: constantRoutes,

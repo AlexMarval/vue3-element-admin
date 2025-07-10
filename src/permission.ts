@@ -1,4 +1,5 @@
 import router from './router'
+import { AppRoute, loginRedirectPath } from './router/routes'
 import { useAuthStore } from './store/modules/user'
 import permissionStore from './store/modules/permission'
 import NProgress from 'nprogress' // progress bar
@@ -9,81 +10,50 @@ import { ElMessage } from 'element-plus'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+const whiteList = [AppRoute.LOGIN, AppRoute.AUTH_REDIRECT] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
-  // console.log('router.beforeEach', to.path, from.path);
-  // start progress bar
   NProgress.start()
-
-  // set page title
   document.title = getPageTitle(to.meta.title)
 
-  // determine whether the user has logged in
   const hasToken = getToken()
   const user = useAuthStore()
   const permission = permissionStore()
 
+  const handleLogout = async (message: string) => {
+    await user.resetToken()
+    ElMessage.error(message)
+    NProgress.done()
+    next(`/login?redirect=${to.path}`)
+  }
+
   if (hasToken) {
-    if (to.path === '/login') {
-      // if is logged in, redirect to the home page
-      NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
-      next({ path: '/' })
-    } else {
-      // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = user.roles && user.roles.length > 0
-      // console.log('hasRoles=', hasRoles);
-      if (hasRoles) {
-        next()
-      } else {
-        try {
-          // get user info
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const infoRes = (await user.getInfo()) as any
-          let roles = []
-          if (infoRes.roles) {
-            roles = infoRes.roles
-          }
+    if (to.path === AppRoute.LOGIN) {
+      NProgress.done()
+      return next({ path: AppRoute.HOME })
+    }
 
-          // generate accessible routes map based on roles
-          const accessRoutes = await permission.generateRoutes(roles)
-          // console.log('accessRoutes=', accessRoutes)
+    const hasRoles = user.roles && user.roles.length > 0
+    if (hasRoles) return next()
 
-          // dynamically add accessible routes
-          // router.addRoutes(accessRoutes);
-          accessRoutes.forEach(item => {
-            router.addRoute(item)
-          })
-          // console.log('next=', accessRoutes);
+    try {
+      const infoRes = await user.getInfo()
+      // @ts-expect-error: roles puede no estar tipado en AuthUser
+      const roles = infoRes.roles || []
+      if (!roles.length)
+        return handleLogout('No tienes permisos asignados. Contacta al administrador.')
 
-          // hack method to ensure that addRoutes is complete
-          // set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          // remove token and go to login page to re-login
-          await user.resetToken()
-          ElMessage.error(error.message || 'Has Error')
-          NProgress.done()
-          next(`/login?redirect=${to.path}`)
-        }
-      }
+      const accessRoutes = await permission.generateRoutes(roles)
+      accessRoutes.forEach(router.addRoute)
+      return next({ ...to, replace: true })
+    } catch (error: any) {
+      return handleLogout(error.message || 'Error de autenticación')
     }
   } else {
-    /* has no token*/
-    if (whiteList.indexOf(to.path) !== -1) {
-      // in the free login whitelist, go directly
-      next()
-    } else {
-      // other pages that do not have permission to access are redirected to the login page.
-      NProgress.done()
-      next(`/login?redirect=${to.path}`)
-    }
+    if (whiteList.includes(to.path as AppRoute)) return next()
+    NProgress.done()
+    next(loginRedirectPath(to.path))
   }
 })
 
-router.afterEach(() => {
-  // finish progress bar
-  NProgress.done()
-})
+router.afterEach(NProgress.done)

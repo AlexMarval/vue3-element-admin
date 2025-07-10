@@ -10,5 +10,6 @@ export const checkAuthToken = async (token: string) => {
   const result = await api.get<AuthUser>('/auth/check-auth-token', {
     headers: { Authorization: `Bearer ${token}` },
   })
+
   return result
 }

@@ -87,8 +87,7 @@
         useAppStore().toggleSidebar()
       },
       async logout() {
-        await store.user().logout()
-        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        await useAuthStore().logout()
       },
     },
   })
