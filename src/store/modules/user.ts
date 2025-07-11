@@ -26,6 +26,7 @@ export const useAuthStore = defineStore('user', () => {
       setToken(response)
     } catch (error) {
       console.error('Error during login:', error)
+      throw error
     }
   }
 
