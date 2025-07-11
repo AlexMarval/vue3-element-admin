@@ -26,44 +26,24 @@
   </div>
 </template>
 
-<script>
-  import { mapState } from 'pinia'
-  import UserCard from './components/UserCard'
-  import Activity from './components/Activity'
-  import Timeline from './components/Timeline'
-  import Account from './components/Account'
-  import { defineComponent } from 'vue'
+<script setup lang="ts">
+  import { ref, computed } from 'vue'
+  import { storeToRefs } from 'pinia'
   import { useAuthStore } from '@/store/modules/user'
+  import UserCard from './components/UserCard.vue'
+  import Activity from './components/Activity.vue'
+  import Timeline from './components/Timeline.vue'
+  import Account from './components/Account.vue'
 
-  export default defineComponent({
-    name: 'Profile',
-    components: { UserCard, Activity, Timeline, Account },
-    data() {
-      return {
-        user: {},
-        activeTab: 'activity',
-      }
-    },
-    computed: {
-      ...mapState(userStore, ['name', 'avatar', 'roles']),
-    },
-    watch: {
-      name(newVal) {
-        this.user.name = newVal
-      },
-    },
-    created() {
-      this.getUser()
-    },
-    methods: {
-      getUser() {
-        this.user = {
-          name: this.name,
-          role: this.roles.join(' | '),
-          email: 'admin@test.com',
-          avatar: this.avatar,
-        }
-      },
-    },
-  })
+  const userStore = useAuthStore()
+  const { name, avatar, roles } = storeToRefs(userStore)
+
+  const activeTab = ref('activity')
+
+  const user = computed(() => ({
+    name: name.value,
+    role: roles.value.join(' | '),
+    email: 'admin@test.com', // Este email es estático en el código original
+    avatar: avatar.value,
+  }))
 </script>

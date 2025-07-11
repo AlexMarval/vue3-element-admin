@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 
 import App from './App.vue'
 import router from './router'
@@ -15,8 +17,11 @@ import 'vue-toastification/dist/index.css'
 import registerGlobalComponents from '@/plugins/global-components'
 
 const app = createApp(App)
-setupStore(app)
+
+app.use(createPinia())
 app.use(router)
+app.use(VueQueryPlugin)
+
 registerGlobalComponents(app)
 app.use(Toast, {
   position: POSITION.BOTTOM_RIGHT,
