@@ -5,7 +5,6 @@ import router, { resetRouter } from '@/router'
 import { login as apiLogin, checkAuthToken as apiCheckAuthToken } from '@/views/login/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import tagsViewStore from './tagsView'
-import { ca } from 'element-plus/es/locales.mjs'
 
 export const useAuthStore = defineStore('user', () => {
   const token = ref(getToken() || '')
@@ -41,7 +40,7 @@ export const useAuthStore = defineStore('user', () => {
     name.value = user.name
     avatar.value = user.avatar || new URL('@/assets/avatar-default.gif', import.meta.url).href
     introduction.value = ''
-    roles.value = ['admin']
+    roles.value = user.roles || []
 
     return user
   }

@@ -1,32 +1,24 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole" />
+    <component :is="currentDashboard" />
   </div>
 </template>
 
-<script>
-  import { defineComponent } from 'vue'
-  import { mapState } from 'pinia'
+<script setup lang="ts">
+  import { computed } from 'vue'
   import { useAuthStore } from '@/store/modules/user'
-  import adminDashboard from './admin'
-  import editorDashboard from './editor'
+  import { UserRole } from '@/constants/roles'
+  import adminDashboard from './admin/index.vue'
+  import editorDashboard from './editor/index.vue'
 
-  export default defineComponent({
-    name: 'Dashboard',
-    components: { adminDashboard, editorDashboard },
-    data() {
-      return {
-        currentRole: 'adminDashboard',
-      }
-    },
-    computed: {
-      ...mapState(useAuthStore, ['roles']),
-    },
-    created() {
-      console.log('dashboard created')
-      if (!this.roles.includes('admin')) {
-        this.currentRole = 'editorDashboard'
-      }
-    },
+  const authStore = useAuthStore()
+
+  const currentDashboard = computed(() => {
+    // Si el usuario tiene el rol ADMIN, muestra el dashboard de admin
+    if (authStore.roles.includes(UserRole.ADMIN)) {
+      return adminDashboard
+    }
+    // Si no, muestra el dashboard de editor
+    return editorDashboard
   })
 </script>

@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router' // createWebHashHistory, createWebHistory
 import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router'
 import { AppRoute } from './routes'
+import { UserRole } from '@/constants/roles'
 
 /* Layout */
 const Layout = (): RouteComponent => import('@/layout/index.vue')
@@ -121,7 +122,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
       alwaysShow: true, // will always show the root menu
       title: 'Permisos',
       icon: 'lock',
-      roles: ['admin', 'editor'], // you can set roles in root nav
+      roles: [UserRole.ADMIN, UserRole.EDITOR], // you can set roles in root nav
     },
     children: [
       {
@@ -130,7 +131,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
         name: 'PagePermission',
         meta: {
           title: 'Permiso de Página',
-          roles: ['admin'], // or you can only set roles in sub nav
+          roles: [UserRole.ADMIN], // or you can only set roles in sub nav
         },
       },
       {
@@ -148,7 +149,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
         name: 'RolePermission',
         meta: {
           title: 'Permiso por Rol',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
     ],

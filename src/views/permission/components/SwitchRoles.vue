@@ -3,8 +3,8 @@
     <div style="margin-bottom: 15px">Your roles: {{ roles }}</div>
     Switch roles:
     <el-radio-group v-model="switchRoles">
-      <el-radio-button label="editor" value="editor" />
-      <el-radio-button label="admin" value="admin" />
+      <el-radio-button :label="UserRole.EDITOR" :value="UserRole.EDITOR" />
+      <el-radio-button :label="UserRole.ADMIN" :value="UserRole.ADMIN" />
     </el-radio-group>
   </div>
 </template>
@@ -12,22 +12,28 @@
 <script>
   import { defineComponent } from 'vue'
   import { useAuthStore } from '@/store/modules/user'
+  import { UserRole } from '@/constants/roles'
 
   export default defineComponent({
+    data() {
+      return {
+        UserRole,
+      }
+    },
     computed: {
       roles() {
-        return userStore().roles
+        const userStore = useAuthStore()
+        return userStore.roles
       },
       switchRoles: {
         get() {
           return this.roles[0]
         },
         set(val) {
-          userStore()
-            .changeRoles(val)
-            .then(() => {
-              this.$emit('change')
-            })
+          const userStore = useAuthStore()
+          userStore.changeRoles(val).then(() => {
+            this.$emit('change')
+          })
         },
       },
     },
