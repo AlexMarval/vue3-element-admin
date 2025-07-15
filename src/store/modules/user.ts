@@ -68,13 +68,10 @@ export const useAuthStore = defineStore('user', () => {
 
   // dynamically modify permissions
   const changeRoles = async (role: string) => {
-    const newToken = role + '-token'
-    token.value = newToken
-    setToken(newToken)
+    // No cambiar el token al cambiar el rol
+    roles.value = [role]
     resetRouter()
     tagsViewStore().delAllViews()
-    // Actualizar el rol en el store para reflejar el cambio inmediatamente
-    roles.value = [role]
   }
 
   return {
