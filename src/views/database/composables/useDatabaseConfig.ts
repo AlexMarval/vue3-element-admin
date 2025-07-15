@@ -1,4 +1,6 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useNotification } from '@/components/Notification'
+
 import {
   useSaveDatabaseConfigMutation,
   useTestDatabaseConnectionMutation,
@@ -9,50 +11,60 @@ import { useDatabaseParamsQuery } from '../mutations/useDatabaseParamsQuery'
 
 export const useDatabaseConfig = () => {
   const { data: paramsData, isLoading } = useDatabaseParamsQuery()
+  const { success, error: notifyError, warning } = useNotification()
+
   const form = ref({
     host: '',
     user: '',
     password: '',
-    port: 3306,
+    port: 1433,
     instance: '',
     database: '',
   })
 
-  // Cargar datos si existen al montar
-  if (paramsData && Array.isArray(paramsData.value) && paramsData.value.length > 0) {
-    paramsData.value.forEach(setting => {
-      switch (setting.name) {
-        case SettingNameEnum.SERVER:
-          form.value.host = setting.value
-          break
-        case SettingNameEnum.INSTANCE:
-          form.value.instance = setting.value
-          break
-        case SettingNameEnum.DATABASE:
-          form.value.database = setting.value
-          break
-        case SettingNameEnum.USER:
-          form.value.user = setting.value
-          break
-        case SettingNameEnum.PASSWORD:
-          form.value.password = setting.value
-          break
-        case SettingNameEnum.PORT:
-          form.value.port = Number(setting.value)
-          break
-      }
-    })
-  }
+  // Sincronizar settings cargados con el formulario cuando paramsData cambie
+  watch(paramsData, (data) => {
+    if (data && Array.isArray(data) && data.length > 0) {
+      data.forEach(setting => {
+        switch (setting.name) {
+          case SettingNameEnum.SERVER:
+            form.value.host = setting.value
+            break
+          case SettingNameEnum.INSTANCE:
+            form.value.instance = setting.value
+            break
+          case SettingNameEnum.DATABASE:
+            form.value.database = setting.value
+            break
+          case SettingNameEnum.USER:
+            form.value.user = setting.value
+            break
+          case SettingNameEnum.PASSWORD:
+            form.value.password = setting.value
+            break
+          case SettingNameEnum.PORT:
+            form.value.port = Number(setting.value)
+            break
+        }
+      })
+    }
+  }, { immediate: true })
 
   const checked = ref(false)
   const error = ref('')
+  // Indicador de error visual en campo contraseña
+  const passwordError = ref(false)
 
   const saveMutation = useSaveDatabaseConfigMutation()
 
   const handleSave = async () => {
     checked.value = false
     error.value = ''
-
+    if (!form.value.password || form.value.password.trim() === '') {
+      passwordError.value = true
+      notifyError('La contraseña no puede estar vacía.')
+      return
+    }
     const settings: Setting[] = [
       {
         group: SettingGroupEnum.SQL_SERVER,
@@ -97,12 +109,11 @@ export const useDatabaseConfig = () => {
         description: 'Puerto de conexión',
       },
     ]
-
     try {
       await saveMutation.mutateAsync({ settings })
-      alert('Configuración guardada correctamente.')
+      success('Configuración guardada correctamente.')
     } catch (e) {
-      error.value = 'Error al guardar la configuración.'
+      notifyError('Error al guardar la configuración.')
     }
   }
 
@@ -111,14 +122,21 @@ export const useDatabaseConfig = () => {
   const handleCheck = async () => {
     checked.value = false
     error.value = ''
-
+    if (!form.value.password || form.value.password.trim() === '') {
+      passwordError.value = true
+      notifyError('La contraseña no puede estar vacía.')
+      return
+    }
     try {
       const ok = await testMutation.mutateAsync()
       checked.value = ok
-
-      if (!ok) error.value = 'No se pudo conectar a la base de datos.'
+      if (ok) {
+        success('¡Conexión exitosa!')
+      } else {
+        notifyError('No se pudo conectar a la base de datos.')
+      }
     } catch (e) {
-      error.value = 'Error al probar la conexión.'
+      notifyError('Error al probar la conexión.')
     }
   }
 
@@ -128,5 +146,6 @@ export const useDatabaseConfig = () => {
     error,
     handleSave,
     handleCheck,
+    passwordError,
   }
 }

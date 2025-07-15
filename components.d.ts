@@ -8,7 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BackToTop: typeof import('./src/components/BackToTop/index.vue')['default']
-    BaseInput: typeof import('./src/components/Input/index.vue').default
+    BaseInput: typeof import('./src/components/Input/BaseInput.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb/index.vue')['default']
     DragSelect: typeof import('./src/components/DragSelect/index.vue')['default']
     DropdownMenu: typeof import('./src/components/Share/DropdownMenu.vue')['default']
