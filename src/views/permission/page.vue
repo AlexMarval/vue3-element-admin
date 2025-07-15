@@ -4,17 +4,13 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import SwitchRoles from './components/SwitchRoles';
+<script setup lang="ts">
+  import { useRouter } from 'vue-router'
+  import SwitchRoles from './components/SwitchRoles.vue'
 
-export default defineComponent({
-  name: 'PagePermission',
-  components: { SwitchRoles },
-  methods: {
-    handleRolesChange() {
-      this.$router.push({ path: '/permission/index?' + +new Date() });
-    }
+  const router = useRouter()
+
+  const handleRolesChange = (): void => {
+    router.push({ path: '/permission/page?' + Date.now() })
   }
-});
 </script>

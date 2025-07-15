@@ -73,6 +73,8 @@ export const useAuthStore = defineStore('user', () => {
     setToken(newToken)
     resetRouter()
     tagsViewStore().delAllViews()
+    // Actualizar el rol en el store para reflejar el cambio inmediatamente
+    roles.value = [role]
   }
 
   return {

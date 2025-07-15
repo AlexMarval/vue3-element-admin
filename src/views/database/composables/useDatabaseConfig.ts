@@ -23,32 +23,36 @@ export const useDatabaseConfig = () => {
   })
 
   // Sincronizar settings cargados con el formulario cuando paramsData cambie
-  watch(paramsData, (data) => {
-    if (data && Array.isArray(data) && data.length > 0) {
-      data.forEach(setting => {
-        switch (setting.name) {
-          case SettingNameEnum.SERVER:
-            form.value.host = setting.value
-            break
-          case SettingNameEnum.INSTANCE:
-            form.value.instance = setting.value
-            break
-          case SettingNameEnum.DATABASE:
-            form.value.database = setting.value
-            break
-          case SettingNameEnum.USER:
-            form.value.user = setting.value
-            break
-          case SettingNameEnum.PASSWORD:
-            form.value.password = setting.value
-            break
-          case SettingNameEnum.PORT:
-            form.value.port = Number(setting.value)
-            break
-        }
-      })
-    }
-  }, { immediate: true })
+  watch(
+    paramsData,
+    data => {
+      if (data && Array.isArray(data) && data.length > 0) {
+        data.forEach(setting => {
+          switch (setting.name) {
+            case SettingNameEnum.SERVER:
+              form.value.host = setting.value
+              break
+            case SettingNameEnum.INSTANCE:
+              form.value.instance = setting.value
+              break
+            case SettingNameEnum.DATABASE:
+              form.value.database = setting.value
+              break
+            case SettingNameEnum.USER:
+              form.value.user = setting.value
+              break
+            case SettingNameEnum.PASSWORD:
+              form.value.password = setting.value
+              break
+            case SettingNameEnum.PORT:
+              form.value.port = Number(setting.value)
+              break
+          }
+        })
+      }
+    },
+    { immediate: true }
+  )
 
   const checked = ref(false)
   const error = ref('')
