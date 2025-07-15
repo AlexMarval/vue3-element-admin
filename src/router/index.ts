@@ -66,6 +66,22 @@ export const constantRoutes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: AppRoute.DATABASE,
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/database/index.vue'),
+        name: 'Database',
+        meta: {
+          title: 'Base de Datos',
+          icon: 'database',
+          roles: [UserRole.ADMIN],
+        },
+      },
+    ],
+  },
+  {
     path: AppRoute.DOCUMENTATION,
     component: Layout,
     children: [

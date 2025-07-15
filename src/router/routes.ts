@@ -31,6 +31,7 @@ export enum AppRoute {
   CLIPBOARD = '/clipboard',
   EXTERNAL_LINK = '/external-link',
   MYDEMO = '/mydemo',
+  DATABASE = '/database',
 }
 
 export const loginRedirectPath = (redirect: string) => `${AppRoute.LOGIN}?redirect=${redirect}`
