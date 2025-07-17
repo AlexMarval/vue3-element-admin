@@ -32,6 +32,33 @@ export enum AppRoute {
   EXTERNAL_LINK = '/external-link',
   MYDEMO = '/mydemo',
   DATABASE = '/database',
+  // Components Demo Routes
+  TINYMCE = '/components/tinymce',
+  AVATAR_UPLOAD = '/components/avatar-upload',
+  DROPZONE = '/components/dropzone',
+  STICKY = '/components/sticky',
+  COUNT_TO = '/components/count-to',
+  MIXIN = '/components/mixin',
+  BACK_TO_TOP = '/components/back-to-top',
+  DRAG_DIALOG = '/components/drag-dialog',
+  DRAG_SELECT = '/components/drag-select',
+  // Charts Demo Routes
+  KEYBOARD_CHART = '/charts/keyboard',
+  LINE_CHART = '/charts/line',
+  MIX_CHART = '/charts/mix-chart',
+  // Nested Menu Routes
+  NESTED_MENU1 = '/nested/menu1',
+  NESTED_MENU1_1 = '/nested/menu1/menu1-1',
+  NESTED_MENU1_2 = '/nested/menu1/menu1-2',
+  NESTED_MENU1_2_1 = '/nested/menu1/menu1-2/menu1-2-1',
+  NESTED_MENU1_2_2 = '/nested/menu1/menu1-2/menu1-2-2',
+  NESTED_MENU1_3 = '/nested/menu1/menu1-3',
+  NESTED_MENU2 = '/nested/menu2',
+  // Table Demo Routes
+  DYNAMIC_TABLE = '/table/dynamic-table',
+  DRAG_TABLE = '/table/drag-table',
+  INLINE_EDIT_TABLE = '/table/inline-edit-table',
+  COMPLEX_TABLE = '/table/complex-table',
 }
 
 export const loginRedirectPath = (redirect: string) => `${AppRoute.LOGIN}?redirect=${redirect}`

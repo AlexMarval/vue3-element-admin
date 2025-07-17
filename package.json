@@ -4,8 +4,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev:test": "vite --mode dev_test",
-    "dev:prod": "vite --mode dev_prod",
+    "sync:viewids": "npx cross-env DOTENV_CONFIG_PATH=.env.dev_test tsx scripts/sync-viewids.ts",
+    "sync:role-permissions": "npx cross-env DOTENV_CONFIG_PATH=.env.dev_test tsx scripts/sync-role-permissions.ts",
+    "sync:all": "npm run sync:viewids && npm run sync:role-permissions",
+    "dev:test": "npm run sync:all && vite --mode dev_test",
+    "dev:prod": "npm run sync:all && vite --mode dev_prod",
     "build:test": "vite build --mode build_test",
     "build:prod": "vite build --mode build_prod",
     "preview": "vite preview --port 4173",
@@ -36,6 +39,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@rushstack/eslint-patch": "^1.8.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
@@ -52,12 +56,15 @@
     "rollup-plugin-svg-sprites": "^1.2.5",
     "sass": "^1.77.6",
     "tailwindcss": "^4.1.11",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.20.3",
     "typescript": "~5.4.0",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-vue-components": "^0.27.1",
     "vite": "^5.3.1",
     "vite-plugin-inspect": "^0.8.4",
     "vite-plugin-mock": "^2.9.8",
-    "vue-tsc": "^2.0.21"
+    "vue-tsc": "^2.0.21",
+    "dotenv": "^16.6.0"
   }
 }

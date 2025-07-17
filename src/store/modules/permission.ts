@@ -1,68 +1,50 @@
-import { defineStore } from 'pinia';
-import { asyncRoutes, constantRoutes } from '@/router';
-import type { RouteRecordRaw } from 'vue-router';
+import { asyncRoutes, constantRoutes } from '@/router'
+import type { RouteRecordRaw } from 'vue-router'
+import { defineStore } from 'pinia'
+import { useAuthStore } from './user'
 
 interface IPermissionState {
-  routes: Array<RouteRecordRaw>;
-  addRoutes: Array<RouteRecordRaw>;
+  routes: Array<RouteRecordRaw>
+  addRoutes: Array<RouteRecordRaw>
 }
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles:string[], route:RouteRecordRaw):boolean {
-  if (route.meta && route.meta.roles) {
-    const rolesArr = route.meta.roles as string[];
-    return roles.some(role => rolesArr.includes(role));
-  } else {
-    return true;
-  }
-}
-
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
-export function filterAsyncRoutes(routes:RouteRecordRaw[], roles: string[]): Array<RouteRecordRaw> {
-  const res:Array<RouteRecordRaw> = [];
-
-  routes.forEach(route => {
-    const tmp = { ...route };
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles);
-      }
-      res.push(tmp);
-    }
-  });
-
-  return res;
-}
+// Role-based filtering removed; using viewId-based filtering only
 
 export default defineStore({
   id: 'permission',
-  state: ():IPermissionState => ({
+  state: (): IPermissionState => ({
     routes: [],
-    addRoutes: []
+    addRoutes: [],
   }),
-  getters: {},
   actions: {
     setRoutes(routes: RouteRecordRaw[]) {
-      this.addRoutes = routes;
-      this.routes = constantRoutes.concat(routes);
+      this.addRoutes = routes
+      this.routes = constantRoutes.concat(routes)
     },
-    generateRoutes(roles: string[]) {
-      let accessedRoutes;
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || [];
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
-      }
-      this.setRoutes(accessedRoutes);
-      return accessedRoutes;
-    }
-  }
-});
+    generateRoutes() {
+      const authStore = useAuthStore()
+      const viewIds = authStore.viewIds
+      // recursive filter by viewId metadata
+      const filterByView = (routes: RouteRecordRaw[]) =>
+        routes.filter(route => {
+          const vid = route.meta?.viewId as string | undefined
+          if (vid) {
+            return viewIds.includes(vid)
+          }
+          if (route.children) {
+            const filteredChildren = filterByView(route.children)
+            route.children = filteredChildren
+            return filteredChildren.length > 0
+          }
+          return true
+        })
+      // filter both constant and async routes
+      const filteredConst = filterByView(constantRoutes)
+      const filteredAsync = filterByView(asyncRoutes)
+      // set the routes: filtered constants + async
+      this.addRoutes = filteredAsync
+      this.routes = filteredConst.concat(filteredAsync)
+      return filteredAsync
+    },
+  },
+})

@@ -16,23 +16,28 @@ import Toast, { POSITION } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import registerGlobalComponents from '@/plugins/global-components'
 
-const app = createApp(App)
+async function bootstrap() {
+  const app = createApp(App)
+  app.use(createPinia())
 
-app.use(createPinia())
-app.use(router)
-app.use(VueQueryPlugin)
 
-registerGlobalComponents(app)
-app.use(Toast, {
-  position: POSITION.BOTTOM_RIGHT,
-  timeout: 3500,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  showCloseButtonOnHover: false,
-})
-app.component('svg-icon', SvgIcon)
-app.directive('permission', vPermission)
-checkEnableLogs(app)
+  app.use(router)
+  app.use(VueQueryPlugin)
 
-app.mount('#app')
+  registerGlobalComponents(app)
+  app.use(Toast, {
+    position: POSITION.BOTTOM_RIGHT,
+    timeout: 3500,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    showCloseButtonOnHover: false,
+  })
+  app.component('svg-icon', SvgIcon)
+  app.directive('permission', vPermission)
+  checkEnableLogs(app)
+
+  app.mount('#app')
+}
+
+bootstrap()

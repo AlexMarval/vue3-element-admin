@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('user', () => {
   const avatar = ref('')
   const introduction = ref('')
   const roles = ref<string[]>([])
+  const viewIds = ref<string[]>([])
 
   // user login
   const login = async (userInfo: { username: string; password: string }) => {
@@ -41,6 +42,7 @@ export const useAuthStore = defineStore('user', () => {
     avatar.value = user.avatar || new URL('@/assets/avatar-default.gif', import.meta.url).href
     introduction.value = ''
     roles.value = user.roles || []
+    viewIds.value = user.viewIds || []
 
     return user
   }
@@ -81,6 +83,7 @@ export const useAuthStore = defineStore('user', () => {
     avatar,
     introduction,
     roles,
+    viewIds,
     login,
     getInfo,
     logout,
