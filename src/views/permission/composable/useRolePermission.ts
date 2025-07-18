@@ -190,10 +190,7 @@ const useRolePermission = (): UseRolePermission => {
       const checkedPaths = allNodes
         .filter(node => role.viewIds.includes(node.meta?.viewId))
         .map(node => node.path)
-      // LOG para depuración
-      console.log('DEBUG checkedPaths:', checkedPaths)
-      console.log('DEBUG role.viewIds:', role.viewIds)
-      console.log('DEBUG allNodes:', allNodes.map(n => ({ path: n.path, viewId: n.meta?.viewId })))
+
       if (treeRef.value) {
         treeRef.value.setCheckedKeys(checkedPaths, false)
       }
