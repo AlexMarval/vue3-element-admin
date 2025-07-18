@@ -1,9 +1,9 @@
-// import { markRaw } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router' // createWebHashHistory, createWebHistory
-import type { Router, RouteRecordRaw, RouteComponent } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { Router, RouteComponent, RouteRecordRaw } from 'vue-router'
 import { AppRoute } from './routes'
 import { ViewId } from './viewIds' // Import ViewId enum if needed
 import { UserRole } from '@/constants/roles'
+import type { AppRouteRecordRaw } from './interfaces'
 
 /* Layout */
 const Layout = (): RouteComponent => import('@/layout/index.vue')
@@ -21,7 +21,7 @@ import tableRouter from './modules/table'
  *
  * Nota: ¡La configuración de los atributos hidden y alwaysShow se ha movido a meta!
  */
-export const constantRoutes: RouteRecordRaw[] = [
+export const constantRoutes: AppRouteRecordRaw[] = [
   {
     path: AppRoute.REDIRECT,
     component: Layout,
@@ -57,6 +57,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: AppRoute.HOME,
     component: Layout,
     redirect: AppRoute.DASHBOARD,
+    meta: { viewId: ViewId.DASHBOARD_ROOT },
     children: [
       {
         path: 'dashboard',
@@ -74,6 +75,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.DATABASE,
     component: Layout,
+    meta: { viewId: ViewId.DATABASE_ROOT },
     children: [
       {
         path: 'index',
@@ -92,6 +94,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: AppRoute.GUIDE,
     component: Layout,
     redirect: '/guide/index',
+    meta: { viewId: ViewId.GUIDE_ROOT },
     children: [
       {
         path: 'index',
@@ -105,7 +108,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: AppRoute.PROFILE,
     component: Layout,
     redirect: '/profile/index',
-    meta: { hidden: true },
+    meta: { hidden: true, viewId: ViewId.PROFILE_ROOT },
     children: [
       {
         path: 'index',
@@ -123,7 +126,7 @@ export const constantRoutes: RouteRecordRaw[] = [
  *
  * Nota: ¡La configuración de los atributos hidden y alwaysShow se ha movido a meta!
  */
-export const asyncRoutes: RouteRecordRaw[] = [
+export const asyncRoutes: AppRouteRecordRaw[] = [
   {
     path: AppRoute.PERMISSION,
     component: Layout,
@@ -173,6 +176,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.ICON,
     component: Layout,
+    meta: { viewId: ViewId.ICONS_ROOT },
     children: [
       {
         path: 'index',
@@ -226,6 +230,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.TAB,
     component: Layout,
+    meta: { viewId: ViewId.TAB_ROOT },
     children: [
       {
         path: 'index',
@@ -261,6 +266,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.ERROR_LOG,
     component: Layout,
+    meta: { viewId: ViewId.ERRORLOG_ROOT },
     children: [
       {
         path: 'log',
@@ -344,6 +350,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.THEME,
     component: Layout,
+    meta: { viewId: ViewId.THEME_ROOT },
     children: [
       {
         path: 'index',
@@ -357,6 +364,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.CLIPBOARD,
     component: Layout,
+    meta: { viewId: ViewId.CLIPBOARD_ROOT },
     children: [
       {
         path: 'index',
@@ -370,6 +378,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: AppRoute.EXTERNAL_LINK,
     component: Layout,
+    meta: { viewId: ViewId.EXTERNAL_LINK_ROOT },
     children: [
       {
         path: 'https://element-plus.midfar.com',
@@ -399,7 +408,11 @@ export const asyncRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-  { path: '/:pathMatch(.*)*', redirect: AppRoute.ERROR_404, meta: { hidden: true } },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: AppRoute.ERROR_404,
+    meta: { hidden: true, viewId: ViewId.ERROR_404 },
+  },
 ]
 
 console.log('BASE_URL=', import.meta.env)
@@ -411,7 +424,7 @@ const createTheRouter = (): Router =>
     // https://router.vuejs.org/guide/essentials/history-mode.html
     history: createWebHistory(import.meta.env.BASE_URL),
     scrollBehavior: () => ({ top: 0 }),
-    routes: constantRoutes,
+    routes: constantRoutes as unknown as RouteRecordRaw[],
   })
 
 interface RouterPro extends Router {

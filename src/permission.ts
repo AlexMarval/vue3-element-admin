@@ -48,7 +48,7 @@ router.beforeEach(async (to, from, next) => {
       if (!roles.length)
         return handleLogout('No tienes permisos asignados. Contacta al administrador.')
 
-      const accessRoutes = await permission.generateRoutes(roles)
+      const accessRoutes = await permission.generateRoutes()
       accessRoutes.forEach(router.addRoute)
 
       return next({ ...to, replace: true })
