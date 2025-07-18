@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { getRoles, getRoleById, addRole, updateRole, deleteRole } from '../api/role'
-import type { Role } from '../interfaces'
+import { getLdapGroups } from '../api/ldapGroup'
+import type { CreateRoleDto, UpdateRoleDto } from '../api/role'
+// GET: Grupos LDAP
+export const useLdapGroupsQuery = () =>
+  useQuery({
+    queryKey: ['ldapGroups'],
+    queryFn: getLdapGroups,
+  })
 
 // GET: Lista de roles
 export const useRolesQuery = () =>
@@ -21,7 +28,7 @@ export const useRoleQuery = (id: number) =>
 export const useAddRoleMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: addRole,
+    mutationFn: (data: CreateRoleDto) => addRole(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] })
     },
@@ -32,8 +39,7 @@ export const useAddRoleMutation = () => {
 export const useUpdateRoleMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, dto }: { id: number; dto: { defaultView: string; viewIds: string[] } }) =>
-      updateRole(id, dto),
+    mutationFn: ({ id, dto }: { id: number; dto: UpdateRoleDto }) => updateRole(id, dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] })
     },

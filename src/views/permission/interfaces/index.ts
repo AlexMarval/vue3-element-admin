@@ -24,11 +24,13 @@ export interface SidebarRoute {
 export interface Role {
   id: number
   name: string
-  defaultView?: string
+  defaultView: string
   viewIds: string[]
+  ldapGroupSAMAccountNames?: string[]
 }
 
 export interface UseRolePermission {
+  sidebarRoutes: ComputedRef<SidebarRoute[]>
   role: Role
   serviceRoutes: Ref<RouteRecordRaw[]>
   routes: Ref<SidebarRoute[]>
@@ -36,13 +38,15 @@ export interface UseRolePermission {
   dialogVisible: Ref<boolean>
   dialogType: Ref<'new' | 'edit'>
   checkStrictly: Ref<boolean>
-  defaultProps: { children: string; label: string }
+  treeProps: { children: string; label: string }
   tree: Ref<InstanceType<typeof ElTree> | null>
+  treeRef: any
   routesData: ComputedRef<SidebarRoute[]>
   handleAddRole(): void
   handleEdit(scope: any): void
   handleDelete(scope: any): void
   confirmRole(): Promise<void>
   getRoutesFn(): void
-  //getRolesFn(): Promise<void>
+  ldapGroups: Ref<{ ldapGroupSAMAccountName: string }[]>
+  selectedLdapGroups: Ref<string[]>
 }

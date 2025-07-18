@@ -15,212 +15,240 @@ import {
   useAddRoleMutation,
   useDeleteRoleMutation,
   useUpdateRoleMutation,
+  useLdapGroupsQuery,
 } from '../mutations/roleMutation'
-import { constantRoutes, asyncRoutes } from '@/router'
-import { ElMessageBox, ElMessage, ElNotification, ElTree } from 'element-plus'
 import type { RouteRecordRaw } from 'vue-router'
+import { constantRoutes, asyncRoutes } from '@/router'
+import { ElMessageBox, ElMessage, ElNotification, type ElTree } from 'element-plus'
 import type { SidebarRoute, Role, UseRolePermission } from '../interfaces'
 
+const defaultRole: Role = {
+  id: 0,
+  name: '',
+  defaultView: '',
+  viewIds: [],
+}
+
 const useRolePermission = (): UseRolePermission => {
-  const defaultRole: Role = { id: 0, name: '', defaultView: '', viewIds: [] }
+  // Estado principal
   const role = reactive<Role>({ ...defaultRole })
+  const rolesList = ref<Role[]>([])
   const serviceRoutes = ref<RouteRecordRaw[]>([])
   const routes = ref<SidebarRoute[]>([])
-  const rolesList = ref<Role[]>([])
+
+  // Estado UI
   const dialogVisible = ref(false)
   const dialogType = ref<'new' | 'edit'>('new')
   const checkStrictly = ref(false)
-  const defaultProps = reactive({ children: 'children', label: 'title' })
-  const tree = ref<InstanceType<typeof ElTree> | null>(null)
+  const treeRef = ref<InstanceType<typeof ElTree> | null>(null)
 
-  const routesData = computed<SidebarRoute[]>(() => routes.value)
+  // LDAP
+  const { data: ldapGroupsData, refetch: refetchLdapGroups } = useLdapGroupsQuery()
+  const ldapGroups = ref<{ ldapGroupSAMAccountName: string }[]>([])
+  const selectedLdapGroups = ref<string[]>([])
 
-  const resolvePath = (basePath: string, routePath: string): string => {
-    if (routePath.startsWith('http://') || routePath.startsWith('https://')) {
-      return routePath
-    }
+  // Configuración de árbol
+  const treeProps = reactive({
+    children: 'children',
+    label: 'title',
+  })
 
-    if (basePath === '') {
-      return path.resolve('/', routePath)
-    }
-
-    return path.resolve(basePath, routePath)
-  }
-
-  const onlyOneShowingChild = (children: any[] = [], parent: any): any => {
-    const showing = children.filter(c => !c.meta?.hidden)
-
-    if (showing.length === 1) {
-      const o = { ...showing[0] }
-      o.path = resolvePath(parent.path, o.path)
-
-      return o
-    }
-
-    if (showing.length === 0) {
-      return { ...parent, path: '', noShowingChildren: true }
-    }
-
-    return false
-  }
-
-  const generateRoutesFn = (items: any[], basePath = '/'): SidebarRoute[] => {
-    const res: SidebarRoute[] = []
-
-    for (let item of items) {
-      if (item.meta?.hidden) continue
-
-      const onlyOne = item.children && onlyOneShowingChild(item.children, item)
-
-      if (item.children && onlyOne && !item.meta?.alwaysShow) {
-        item = onlyOne
-      }
-
-      const data: SidebarRoute = {
-        path: resolvePath(basePath, item.path),
-        title: item.meta?.title,
-        meta: item.meta ?? { viewId: '', title: item.meta?.title },
-      }
-
-      if (item.children) {
-        data.children = generateRoutesFn(item.children, data.path)
-      }
-
-      res.push(data)
-    }
-
-    return res
-  }
-
-  const generateArr = (items: SidebarRoute[]): SidebarRoute[] => {
-    let arr: SidebarRoute[] = []
-
-    items.forEach(i => {
-      arr.push(i)
-      if (i.children) arr = arr.concat(generateArr(i.children))
-    })
-
-    return arr
-  }
-
-  const generateTree = (
-    items: any[],
-    basePath = '/',
-    checkedKeys: Array<string | number>
-  ): SidebarRoute[] => {
-    const res: SidebarRoute[] = []
-
-    for (const item of items) {
-      const routePath = resolvePath(basePath, item.path)
-      const children = item.children ? generateTree(item.children, routePath, checkedKeys) : []
-
-      if (checkedKeys.includes(routePath) || children.length) {
-        res.push({ ...item, children })
-      }
-    }
-
-    return res
-  }
-
-  /**
-   * Carga el árbol de rutas desde Vue Router
-   */
-  const getRoutesFn = (): void => {
-    // Combinar configuración de rutas constante y dinámicas para preservar estructura anidada
-    const allRoutesConfig = [...constantRoutes, ...asyncRoutes]
-
-    serviceRoutes.value = allRoutesConfig as RouteRecordRaw[]
-    routes.value = generateRoutesFn(allRoutesConfig)
-  }
-
-  // Query para obtener la lista de roles
+  // Consultas y mutaciones
   const { data: rolesQueryData, refetch: refetchRoles } = useRolesQuery()
-  // Sincronizar rolesList con los datos reactivos de Vue Query
+  const addRoleMutation = useAddRoleMutation()
+  const updateRoleMutation = useUpdateRoleMutation()
+  const deleteRoleMutation = useDeleteRoleMutation()
+
+  // Transformar datos LDAP
   watch(
-    () => rolesQueryData?.value,
+    () => ldapGroupsData.value,
+    newVal => {
+      if (!newVal) {
+        ldapGroups.value = []
+        return
+      }
+      if (Array.isArray(newVal)) {
+        ldapGroups.value =
+          typeof newVal[0] === 'string'
+            ? newVal.map(sam => ({ ldapGroupSAMAccountName: sam }))
+            : newVal
+      } else if (newVal.data) {
+        ldapGroups.value = newVal.data
+      }
+    },
+    { immediate: true }
+  )
+
+  // Sincronizar lista de roles
+  watch(
+    () => rolesQueryData.value,
     newVal => {
       rolesList.value = Array.isArray(newVal) ? newVal : newVal?.data ?? []
     },
     { immediate: true }
   )
 
-  const addRoleMutation = useAddRoleMutation()
-  const updateRoleMutation = useUpdateRoleMutation()
-  const deleteRoleMutation = useDeleteRoleMutation()
+  // Rutas procesadas
+  const sidebarRoutes = computed<SidebarRoute[]>(() => routes.value)
 
-  const handleAddRole = (): void => {
-    Object.assign(role, defaultRole)
-    tree.value?.setCheckedNodes([])
-    dialogType.value = 'new'
-    dialogVisible.value = true
+  // Funciones de utilidad
+  const resolvePath = (basePath: string, routePath: string): string => {
+    if (/^https?:\/\//.test(routePath)) return routePath
+    return basePath ? path.resolve(basePath, routePath) : path.resolve('/', routePath)
   }
 
-  const handleEdit = (scope: any): void => {
-    dialogType.value = 'edit'
-    dialogVisible.value = true
-    checkStrictly.value = true
+  const getSingleVisibleChild = (children: RouteRecordRaw[] = [], parent: RouteRecordRaw) => {
+    const visibleChildren = children.filter(c => !c.meta?.hidden)
 
-    Object.assign(role, deepClone(scope.row))
+    if (visibleChildren.length === 1) {
+      return {
+        ...visibleChildren[0],
+        path: resolvePath(parent.path, visibleChildren[0].path),
+      }
+    }
+
+    if (visibleChildren.length === 0) {
+      return { ...parent, path: '', noShowingChildren: true }
+    }
+
+    return null
+  }
+
+  const generateSidebarRoutes = (items: RouteRecordRaw[], basePath = '/'): SidebarRoute[] => {
+    return items.reduce<SidebarRoute[]>((acc, item) => {
+      if (item.meta?.hidden) return acc
+
+      const singleChild = item.children ? getSingleVisibleChild(item.children, item) : null
+
+      const actualItem = singleChild && !item.meta?.alwaysShow ? singleChild : item
+
+      const routePath = resolvePath(basePath, actualItem.path)
+      const routeData: SidebarRoute = {
+        path: routePath,
+        title: typeof actualItem.meta?.title === 'string' ? actualItem.meta?.title : undefined,
+        meta: {
+          ...(actualItem.meta as object),
+          viewId: typeof actualItem.meta?.viewId === 'string' ? actualItem.meta?.viewId : '',
+          title: typeof actualItem.meta?.title === 'string' ? actualItem.meta?.title : undefined,
+        },
+      }
+
+      if (actualItem.children) {
+        routeData.children = generateSidebarRoutes(actualItem.children, routePath)
+      }
+
+      return [...acc, routeData]
+    }, [])
+  }
+
+  const flattenRoutes = (items: SidebarRoute[]): SidebarRoute[] => {
+    return items.flatMap(item => [item, ...(item.children ? flattenRoutes(item.children) : [])])
+  }
+
+  // Inicialización de rutas
+  const initializeRoutes = () => {
+    const allRoutes = [...constantRoutes, ...asyncRoutes] as RouteRecordRaw[]
+    serviceRoutes.value = allRoutes
+    routes.value = generateSidebarRoutes(allRoutes)
+  }
+
+  // Handlers de roles
+  const resetRoleForm = () => {
+    Object.assign(role, defaultRole)
+    treeRef.value?.setCheckedNodes([])
+    selectedLdapGroups.value = []
+  }
+
+  const showRoleDialog = (type: 'new' | 'edit') => {
+    dialogType.value = type
+    dialogVisible.value = true
+    refetchLdapGroups()
+  }
+
+  const handleAddRole = () => {
+    resetRoleForm()
+    showRoleDialog('new')
+  }
+
+  const handleEdit = (rowData: Role) => {
+    Object.assign(role, {
+      id: rowData.id,
+      name: rowData.name,
+      defaultView: rowData.defaultView,
+      viewIds: Array.isArray(rowData.viewIds) ? [...rowData.viewIds] : [],
+      ldapGroupSAMAccountNames: Array.isArray(rowData.ldapGroupSAMAccountNames)
+        ? [...rowData.ldapGroupSAMAccountNames]
+        : [],
+    })
+    selectedLdapGroups.value = rowData.ldapGroupSAMAccountNames || []
+    showRoleDialog('edit')
 
     nextTick(() => {
-      // Obtener todos los nodos del árbol para encontrar las rutas por viewId
-      const allNodes = generateArr(routes.value)
-      const paths = allNodes
+      checkStrictly.value = true
+      const allRoutes = flattenRoutes(routes.value)
+      const checkedPaths = allRoutes
         .filter(node => role.viewIds.includes(node.meta?.viewId))
         .map(node => node.path)
-      tree.value?.setCheckedKeys(paths, false)
+
+      treeRef.value?.setCheckedKeys(checkedPaths, false)
       checkStrictly.value = false
     })
   }
 
-  const handleDelete = (scope: any): void => {
-    ElMessageBox.confirm('Confirm to remove the role?', 'Warning', {
-      confirmButtonText: 'Confirm',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-    })
-      .then(async () => {
-        await deleteRoleMutation.mutateAsync(scope.row.id)
-        refetchRoles()
-        ElMessage({ type: 'success', message: 'Delete succeeded!' })
+  const handleDelete = async (roleId: number) => {
+    try {
+      await ElMessageBox.confirm('Confirm to remove the role?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
       })
-      .catch(() => {})
+      await deleteRoleMutation.mutateAsync(roleId)
+      refetchRoles()
+      ElMessage.success('Delete succeeded!')
+    } catch {}
   }
 
-  const confirmRole = async (): Promise<void> => {
-    const checkedKeys = tree.value?.getCheckedKeys() as string[]
-    // Mapear las rutas seleccionadas a sus viewIds
-    const allNodes = generateArr(routes.value)
-    role.viewIds = allNodes
+  const saveRole = async () => {
+    const checkedKeys = (treeRef.value?.getCheckedKeys() as string[]) || []
+    const allRoutes = flattenRoutes(routes.value)
+
+    role.viewIds = allRoutes
       .filter(node => checkedKeys.includes(node.path))
       .map(node => node.meta?.viewId)
       .filter(Boolean) as string[]
 
+    const payload = {
+      defaultView: role.defaultView || '',
+      viewIds: role.viewIds,
+      ldapGroupSAMAccountNames: selectedLdapGroups.value,
+    }
+
     if (dialogType.value === 'edit') {
-      const updatePayload = {
-        defaultView: role.defaultView ?? '',
-        viewIds: role.viewIds,
-      }
-      await updateRoleMutation.mutateAsync({ id: role.id, dto: updatePayload })
-      refetchRoles()
-      const idx = rolesList.value.findIndex(r => r.id === role.id)
-      if (idx !== -1) rolesList.value.splice(idx, 1, { ...role })
+      await updateRoleMutation.mutateAsync({ id: role.id, dto: payload })
+      const index = rolesList.value.findIndex(r => r.id === role.id)
+      if (index !== -1) rolesList.value[index] = { ...role }
     } else {
-      const { data } = await addRoleMutation.mutateAsync(role)
-      role.id = data.id // Asumimos que la API devuelve el nuevo ID
-      refetchRoles()
+      const { data } = await addRoleMutation.mutateAsync({
+        ...payload,
+        name: role.name,
+      })
+      role.id = data.id
       rolesList.value.push({ ...role })
     }
 
     dialogVisible.value = false
-
-    ElNotification({
+    ElNotification.success({
       title: 'Success',
       dangerouslyUseHTMLString: true,
-      message: `<div>Role ID: ${role.id}</div><div>Role Name: ${role.name}</div><div>Default View: ${role.defaultView}</div>`,
-      type: 'success',
+      message: `
+        <div>Role ID: ${role.id}</div>
+        <div>Role Name: ${role.name}</div>
+        <div>Default View: ${role.defaultView}</div>
+      `,
     })
   }
+
+  onMounted(initializeRoutes)
 
   return {
     role,
@@ -230,15 +258,18 @@ const useRolePermission = (): UseRolePermission => {
     dialogVisible,
     dialogType,
     checkStrictly,
-    defaultProps,
-    tree,
-    routesData,
+    treeProps,
+    tree: treeRef,
+    treeRef,
+    routesData: sidebarRoutes,
+    sidebarRoutes,
+    ldapGroups,
+    selectedLdapGroups,
     handleAddRole,
     handleEdit,
-    handleDelete,
-    confirmRole,
-    getRoutesFn,
-    // getRolesFn eliminado, ya no es necesario
+    handleDelete: (scope: any) => handleDelete(scope.row.id),
+    confirmRole: saveRole,
+    getRoutesFn: initializeRoutes,
   }
 }
 
