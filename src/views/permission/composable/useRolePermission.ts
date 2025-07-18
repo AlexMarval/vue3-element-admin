@@ -183,16 +183,22 @@ const useRolePermission = (): UseRolePermission => {
     selectedLdapGroups.value = rowData.ldapGroupSAMAccountNames || []
     showRoleDialog('edit')
 
-    nextTick(() => {
+    // Esperar a que el diálogo y el árbol estén renderizados
+    setTimeout(() => {
       checkStrictly.value = true
-      const allRoutes = flattenRoutes(routes.value)
-      const checkedPaths = allRoutes
+      const allNodes = flattenRoutes(routes.value)
+      const checkedPaths = allNodes
         .filter(node => role.viewIds.includes(node.meta?.viewId))
         .map(node => node.path)
-
-      treeRef.value?.setCheckedKeys(checkedPaths, false)
+      // LOG para depuración
+      console.log('DEBUG checkedPaths:', checkedPaths)
+      console.log('DEBUG role.viewIds:', role.viewIds)
+      console.log('DEBUG allNodes:', allNodes.map(n => ({ path: n.path, viewId: n.meta?.viewId })))
+      if (treeRef.value) {
+        treeRef.value.setCheckedKeys(checkedPaths, false)
+      }
       checkStrictly.value = false
-    })
+    }, 150)
   }
 
   const handleDelete = async (roleId: number) => {
